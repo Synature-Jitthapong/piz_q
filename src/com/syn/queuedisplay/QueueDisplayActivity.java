@@ -122,7 +122,7 @@ public class QueueDisplayActivity extends Activity{
 		readQueueData();
 		
 		surfaceHolder = surface.getHolder();
-		new MyMediaPlayer(QueueDisplayActivity.this, surface, surfaceHolder, queueData.getVideoPath());
+		new MyMediaPlayer(QueueDisplayActivity.this, surfaceHolder, queueData.getVideoPath());
 		
 		// update queue
 		if(queueData.isEnableQueue()){
