@@ -69,8 +69,8 @@
 
                     <SurfaceView
                         android:id="@+id/surfaceView1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:layout_weight="1" />
 
                     <TextView
@@ -179,7 +179,7 @@
                             android:layout_marginRight="1dp"
                             android:background="@color/sub_head_dark"
                             android:padding="4dp"
-                            android:text="Time-In"
+                            android:text="Waiting"
                             android:textAppearance="?android:attr/textAppearanceMedium" />
 
                         <TextView

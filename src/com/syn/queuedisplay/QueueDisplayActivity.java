@@ -116,8 +116,6 @@ public class QueueDisplayActivity extends Activity{
 		tvSumQC = (TextView) findViewById(R.id.textViewSumQC);
 		tvPlaying = (TextView) findViewById(R.id.textViewPlaying);
 		
-		tvMarquee.setSelected(true);
-		
 		deviceCode = Secure.getString(this.getContentResolver(),
 				Secure.ANDROID_ID);
 		
