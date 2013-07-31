@@ -92,6 +92,7 @@ public class QueueDisplayActivity extends Activity{
 	private TextView tvSumQA;
 	private TextView tvSumQB;
 	private TextView tvSumQC;
+	private TextView tvPlaying;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +114,7 @@ public class QueueDisplayActivity extends Activity{
 		tvSumQB = (TextView) findViewById(R.id.textViewSumQB);
 		tvSumQA = (TextView) findViewById(R.id.textViewSumQA);
 		tvSumQC = (TextView) findViewById(R.id.textViewSumQC);
+		tvPlaying = (TextView) findViewById(R.id.textViewPlaying);
 		
 		tvMarquee.setSelected(true);
 		
@@ -126,8 +128,7 @@ public class QueueDisplayActivity extends Activity{
 					
 					@Override
 					public void onPlayedFileName(String fileName) {
-						// TODO Auto-generated method stub
-						
+						tvPlaying.setText(fileName);
 					}
 					
 					@Override
@@ -525,10 +526,11 @@ public class QueueDisplayActivity extends Activity{
 		
 	}
 	
+
 	@Override
-	protected void onStop() {
+	protected void onDestroy() {
 		mMediaPlayer.releaseMediaPlayer();
-		super.onStop();
+		super.onDestroy();
 	}
 
 	private void popup(String title, String msg){

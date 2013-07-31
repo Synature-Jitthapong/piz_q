@@ -58,21 +58,31 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@android:color/background_dark"
                 android:orientation="vertical" >
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical" >
+                    android:background="@color/black_overlay"
+                    android:gravity="center" >
 
                     <SurfaceView
                         android:id="@+id/surfaceView1"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                </LinearLayout>
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:id="@+id/textViewPlaying"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentRight="true"
+                        android:text="Small Text"
+                        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                </RelativeLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -129,7 +139,9 @@
                             android:layout_weight="1"
                             android:text="Pickup Queue"
                             android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:textColor="@android:color/holo_blue_bright"
                             android:textStyle="bold" />
+
                     </LinearLayout>
 
                     <LinearLayout
@@ -138,11 +150,10 @@
 
                         <TextView
                             android:id="@+id/textView1"
-                            android:layout_width="150dp"
+                            android:layout_width="80dp"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="1dp"
                             android:layout_marginRight="1dp"
-                            android:layout_weight="0.25"
                             android:background="@color/sub_head_dark"
                             android:padding="4dp"
                             android:text="#"
@@ -150,7 +161,7 @@
 
                         <TextView
                             android:id="@+id/textView6"
-                            android:layout_width="150dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="1dp"
                             android:layout_marginRight="1dp"
@@ -162,11 +173,10 @@
 
                         <TextView
                             android:id="@+id/textView7"
-                            android:layout_width="180dp"
+                            android:layout_width="100dp"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="1dp"
                             android:layout_marginRight="1dp"
-                            android:layout_weight="0.25"
                             android:background="@color/sub_head_dark"
                             android:padding="4dp"
                             android:text="Time-In"
@@ -174,10 +184,9 @@
 
                         <TextView
                             android:id="@+id/textView8"
-                            android:layout_width="180dp"
+                            android:layout_width="100dp"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="1dp"
-                            android:layout_weight="0.25"
                             android:background="@color/sub_head_dark"
                             android:padding="4dp"
                             android:text="Status"
@@ -216,6 +225,7 @@
                         android:padding="4dp"
                         android:text="Calling Queue"
                         android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textColor="@android:color/holo_blue_bright"
                         android:textStyle="bold" />
 
                     <LinearLayout
