@@ -66,6 +66,7 @@ public class QueueDisplayActivity extends Activity{
 	 * The instance of the {@link SystemUiHider} for this activity.
 	 */
 	private SystemUiHider mSystemUiHider;
+	private MyMediaPlayer mMediaPlayer;
 	private String deviceCode = "";
 	private String serviceUrl = "";
 	private boolean isTakeRun = false;
@@ -75,7 +76,6 @@ public class QueueDisplayActivity extends Activity{
 
 	private QueueData queueData;
 	private SurfaceView surface;
-	private SurfaceHolder surfaceHolder;
 	private TextView tvMarquee;
 	
 
@@ -121,8 +121,21 @@ public class QueueDisplayActivity extends Activity{
 		
 		readQueueData();
 		
-		surfaceHolder = surface.getHolder();
-		new MyMediaPlayer(QueueDisplayActivity.this, surfaceHolder, queueData.getVideoPath());
+		mMediaPlayer = new MyMediaPlayer(QueueDisplayActivity.this, surface, 
+				queueData.getVideoPath(), new MyMediaPlayer.MediaPlayerStateListener() {
+					
+					@Override
+					public void onPlayedFileName(String fileName) {
+						// TODO Auto-generated method stub
+						
+					}
+					
+					@Override
+					public void onError(Exception e) {
+						// TODO Auto-generated method stub
+						
+					}
+				} );
 		
 		// update queue
 		if(queueData.isEnableQueue()){
@@ -512,6 +525,12 @@ public class QueueDisplayActivity extends Activity{
 		
 	}
 	
+	@Override
+	protected void onStop() {
+		mMediaPlayer.releaseMediaPlayer();
+		super.onStop();
+	}
+
 	private void popup(String title, String msg){
 		new AlertDialog.Builder(QueueDisplayActivity.this)
 		.setTitle(title)
