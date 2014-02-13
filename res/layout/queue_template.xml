@@ -1,26 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:orientation="vertical" >
 
     <TextView
-        android:id="@+id/textViewQueue"
+        android:id="@+id/tvQueueName"
         style="@style/ColumnDetail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
         android:layout_marginBottom="0dp"
         android:gravity="center"
+        android:text="Queue Name"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="28sp"
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/tvQueueSub"
+        android:id="@+id/tvQueueSummary"
         style="@style/ColumnDetail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/tvQueueName"
         android:layout_marginBottom="1dp"
         android:ellipsize="marquee"
         android:fadingEdge="horizontal"
@@ -30,7 +37,8 @@
         android:paddingBottom="4dp"
         android:scrollHorizontally="true"
         android:singleLine="true"
+        android:text="Customer Name"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textSize="14sp" />
 
-</LinearLayout>
+</RelativeLayout>

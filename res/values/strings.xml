@@ -19,5 +19,17 @@
     <string name="status">Status</string>
     <string name="pickup_queue">Pickup Queue</string>
     <string name="table_queue">Table Queue</string>
+    <string name="url">Url</string>
+    <string name="connection">Connection</string>
+    <string name="resource">Resource</string>
+    <string name="queue_speak_dir">Queue Speak Dir</string>
+    <string name="refresh">Refresh</string>
+    <string name="backoffice_url">Backoffice url</string>
+    <string name="refresh_interval">refresh interval</string>
+    <string name="video_directory">video directory</string>
+    <string name="queue_feature">Queue feature</string>
+    <string name="a">A</string>
+    <string name="b">B</string>
+    <string name="c">C</string>
 
 </resources>

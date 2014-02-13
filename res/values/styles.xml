@@ -12,9 +12,16 @@
             backward-compatibility can go here.
         -->
     </style>
-
+    <style name="ActivityDialogTheme" parent="android:Theme.Holo.Dialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowSoftInputMode">stateAlwaysHidden</item>
+        <item name="android:windowActionModeOverlay">true</item>
+    	<item name="android:windowIsTranslucent">true</item>
+    </style>
     <!-- Application theme. -->
-    <style name="AppTheme" parent="AppBaseTheme">
+    <style name="SettingActivityTheme" parent="android:Theme.Holo.Light"></style>
+    <style name="QueueActivityTheme" parent="AppBaseTheme">
         <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
         <item name="android:windowActionBarOverlay">true</item>
         <item name="android:windowBackground">@color/background_dark</item>
@@ -22,7 +29,6 @@
     <style name="FullscreenActionBarStyle" parent="android:Widget.Holo.ActionBar">
         <item name="android:background">@android:color/transparent</item>
     </style>
-    
     <style name="ColumnHeader" parent="android:Widget.TextView">
         <item name="android:background">@drawable/header_column</item>
         <item name="android:layout_marginRight">1dp</item>
