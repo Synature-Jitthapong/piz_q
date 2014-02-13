@@ -2,14 +2,9 @@ package com.syn.queuedisplay;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import com.j1tth4.mediaplayer.VideoPlayer;
-import com.j1tth4.mobile.util.MyMediaPlayer;
 import com.syn.pos.QueueDisplayInfo;
 import com.syn.queuedisplay.util.SystemUiHider;
-
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
@@ -61,9 +56,6 @@ public class QueueDisplayActivity extends Activity{
 	/**
 	 * The instance of the {@link SystemUiHider} for this activity.
 	 */
-	private int mQueueIdx = -1;
-	private String[] mQueueToSpeak;
-	
 	private SystemUiHider mSystemUiHider;
 	private Handler mHandlerQueue;
 	private VideoPlayer mVideoPlayer;
@@ -155,7 +147,6 @@ public class QueueDisplayActivity extends Activity{
 		});
 		
 		// init object
-		mQueueToSpeak = new String[3];
 		mQueueALst = new ArrayList<QueueDisplayInfo.QueueInfo>();
 		mQueueBLst = new ArrayList<QueueDisplayInfo.QueueInfo>();
 		mQueueCLst = new ArrayList<QueueDisplayInfo.QueueInfo>();
@@ -178,7 +169,6 @@ public class QueueDisplayActivity extends Activity{
 			@Override
 			public void onPlayComplete() {
 				mVideoPlayer.setSoundVolumn(1.0f, 1.0f);
-				mQueueIdx++;
 			}
 		});
 		// init media player
@@ -215,25 +205,19 @@ public class QueueDisplayActivity extends Activity{
 		delayedHide(100);
 	}
 
-//	private void createMarqueeText(){
-//		if (marqueeLst.size() > 0) {
-//			StringBuilder strHtml = new StringBuilder();
-//			StringBuilder strInfoText = new StringBuilder();
-//			for (QueueData.MarqueeText marquee : marqueeLst) {
-//				strInfoText.append(marquee.getTextVal());
-//				for (int i = 0; i < 10; i++) {
-//					strInfoText.append("\t");
-//				}
-//			}
-//			strHtml.append("<html><body style=\"background:#000;\"><FONT COLOR=\"#FFF\"><marquee direction=\"Left\" style=\"width: auto;\" >");
-//			strHtml.append(strInfoText);
-//			strHtml.append("</marquee></FONT></body></html>");
-//			mWebView.setVisibility(View.VISIBLE);
-//			mWebView.loadData(strHtml.toString(), "text/html", "UTF-8");
-//		} else {
-//			mWebView.setVisibility(View.GONE);
-//		}
-//	}
+	private void createMarqueeText(){
+		if (!QueueApplication.getInfoText().equals("")) {
+			mWebView.setVisibility(View.VISIBLE);
+			StringBuilder strHtml = new StringBuilder();
+			strHtml.append("<html><body style=\"background:#000;\"><FONT COLOR=\"#FFF\"><marquee direction=\"Left\" style=\"width: auto;\" >");
+			strHtml.append(QueueApplication.getInfoText());
+			strHtml.append("</marquee></FONT></body></html>");
+			mWebView.setVisibility(View.VISIBLE);
+			mWebView.loadData(strHtml.toString(), "text/html", "UTF-8");
+		} else {
+			mWebView.setVisibility(View.GONE);
+		}
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -323,10 +307,6 @@ public class QueueDisplayActivity extends Activity{
 
 	};
 	
-	private void speakQueue(){
-		mSpeakCallingQueue.speak(mQueueToSpeak[mQueueIdx]);	
-	}
-	
 	private void filterQueueGroup(QueueDisplayInfo queueDisplayInfo){
 		int totalQueueA = 0;
 		int totalQueueB = 0;
@@ -353,17 +333,17 @@ public class QueueDisplayActivity extends Activity{
 		if(!queueDisplayInfo.getSzCurQueueGroupA().equals("")){
 			mTvCallA.setText(queueDisplayInfo.getSzCurQueueGroupA());
 			mTvCallASub.setText(queueDisplayInfo.getSzCurQueueCustomerA());
-			mQueueToSpeak[0] = queueDisplayInfo.getSzCurQueueGroupA();
+			mSpeakCallingQueue.speak(queueDisplayInfo.getSzCurQueueGroupA());	
 		}
 		if(!queueDisplayInfo.getSzCurQueueGroupB().equals("")){
 			mTvCallB.setText(queueDisplayInfo.getSzCurQueueGroupB());
 			mTvCallBSub.setText(queueDisplayInfo.getSzCurQueueCustomerB());
-			mQueueToSpeak[1] = queueDisplayInfo.getSzCurQueueGroupB();
+			mSpeakCallingQueue.speak(queueDisplayInfo.getSzCurQueueGroupB());
 		}
 		if(!queueDisplayInfo.getSzCurQueueGroupC().equals("")){
 			mTvCallC.setText(queueDisplayInfo.getSzCurQueueGroupC());
 			mTvCallCSub.setText(queueDisplayInfo.getSzCurQueueCustomerC());
-			mQueueToSpeak[2] = queueDisplayInfo.getSzCurQueueGroupC();
+			mSpeakCallingQueue.speak(queueDisplayInfo.getSzCurQueueGroupC());
 		}
 		if(totalQueueA > 0)
 			mTvSumQA.setText(String.valueOf(totalQueueA));
@@ -371,13 +351,6 @@ public class QueueDisplayActivity extends Activity{
 			mTvSumQB.setText(String.valueOf(totalQueueB));
 		if(totalQueueC > 0)
 			mTvSumQC.setText(String.valueOf(totalQueueC));
-		if(mQueueToSpeak[0] != null && !mQueueToSpeak[0].equals(""))
-			mQueueIdx = 0;
-		if(mQueueToSpeak[1] != null && !mQueueToSpeak[1].equals(""))
-			mQueueIdx = 1;
-		if(mQueueToSpeak[2] != null && !mQueueToSpeak[2].equals(""))
-			mQueueIdx = 2;
-		speakQueue();
 		mQueueAAdapter.notifyDataSetChanged();
 		mQueueBAdapter.notifyDataSetChanged();
 		mQueueCAdapter.notifyDataSetChanged();
@@ -387,6 +360,7 @@ public class QueueDisplayActivity extends Activity{
 	protected void onResume() {
 		try {
 			mVideoPlayer.resume();
+			createMarqueeText();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

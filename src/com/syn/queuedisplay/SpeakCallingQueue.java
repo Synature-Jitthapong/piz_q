@@ -24,7 +24,7 @@ public class SpeakCallingQueue implements OnCompletionListener, OnPreparedListen
 		mOnPlaySoundListener = onPlayListener;
 	}
 	
-	public synchronized void speak(String queueText){
+	public void speak(String queueText){
 		getCallingSoundPath(queueText);
 		playSound();
 	}
@@ -34,7 +34,6 @@ public class SpeakCallingQueue implements OnCompletionListener, OnPreparedListen
 			mMediaPlayer.reset();
 			mMediaPlayer.setDataSource(mSoundPath[mSoundIdx]);
 			mMediaPlayer.prepare();
-			mMediaPlayer.setScreenOnWhilePlaying(true);
 			mMediaPlayer.setOnPreparedListener(this);
 			mMediaPlayer.setOnCompletionListener(this);
 		} catch (IllegalArgumentException e) {

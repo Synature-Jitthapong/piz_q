@@ -25,6 +25,7 @@ public class SettingActivity extends PreferenceActivity{
 	public static final String PREF_REFRESH = "pref_refresh";
 	public static final String PREF_VDO_DIR = "pref_vdo_dir";
 	public static final String PREF_QUEUE_SPEAK_DIR = "pref_queue_speak_dir";
+	public static final String PREF_INFO_TEXT = "pref_info_text";
 
 	private static final boolean ALWAYS_SIMPLE_PREFS = false;
 
@@ -46,6 +47,7 @@ public class SettingActivity extends PreferenceActivity{
 		bindPreferenceSummaryToValue(findPreference(PREF_REFRESH));
 		bindPreferenceSummaryToValue(findPreference(PREF_VDO_DIR));
 		bindPreferenceSummaryToValue(findPreference(PREF_QUEUE_SPEAK_DIR));
+		bindPreferenceSummaryToValue(findPreference(PREF_INFO_TEXT));
 	}
 
 	@Override

@@ -48,7 +48,6 @@
                 android:layout_centerVertical="true"
                 android:gravity="right|center_vertical"
                 android:text="DigitalClock"
-                android:textColor="@android:color/white"
                 android:textSize="32sp"
                 android:textStyle="bold" />
 
