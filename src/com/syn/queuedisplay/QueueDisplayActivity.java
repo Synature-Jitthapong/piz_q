@@ -1,15 +1,19 @@
 package com.syn.queuedisplay;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 import com.j1tth4.mediaplayer.VideoPlayer;
 import com.syn.pos.QueueDisplayInfo;
 import com.syn.queuedisplay.util.SystemUiHider;
+
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -59,7 +63,9 @@ public class QueueDisplayActivity extends Activity{
 	private SystemUiHider mSystemUiHider;
 	private Handler mHandlerQueue;
 	private VideoPlayer mVideoPlayer;
+	private Cursor mCallingQueueCursor;
 	private SpeakCallingQueue mSpeakCallingQueue;
+	private QueueProvider mQueueProvider;
 	private List<QueueDisplayInfo.QueueInfo> mQueueALst;
 	private List<QueueDisplayInfo.QueueInfo> mQueueBLst;
 	private List<QueueDisplayInfo.QueueInfo> mQueueCLst;
@@ -147,6 +153,7 @@ public class QueueDisplayActivity extends Activity{
 		});
 		
 		// init object
+		mQueueProvider = new QueueProvider(QueueApplication.getWriteDatabase());
 		mQueueALst = new ArrayList<QueueDisplayInfo.QueueInfo>();
 		mQueueBLst = new ArrayList<QueueDisplayInfo.QueueInfo>();
 		mQueueCLst = new ArrayList<QueueDisplayInfo.QueueInfo>();
@@ -168,6 +175,8 @@ public class QueueDisplayActivity extends Activity{
 			
 			@Override
 			public void onPlayComplete() {
+				if(mCallingQueueCursor.moveToNext())
+					mSpeakCallingQueue.speak(mCallingQueueCursor.getString(0));
 				mVideoPlayer.setSoundVolumn(1.0f, 1.0f);
 			}
 		});
@@ -290,7 +299,7 @@ public class QueueDisplayActivity extends Activity{
 					filterQueueGroup(queueInfo);
 				}
 			};
-			
+	
 	private Runnable mUpdateQueue = new Runnable() {
 
 		@Override
@@ -333,27 +342,50 @@ public class QueueDisplayActivity extends Activity{
 		if(!queueDisplayInfo.getSzCurQueueGroupA().equals("")){
 			mTvCallA.setText(queueDisplayInfo.getSzCurQueueGroupA());
 			mTvCallASub.setText(queueDisplayInfo.getSzCurQueueCustomerA());
-			mSpeakCallingQueue.speak(queueDisplayInfo.getSzCurQueueGroupA());	
+			try {
+				mQueueProvider.addCallingQueue(queueDisplayInfo.getSzCurQueueGroupA());
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else{
+			mQueueProvider.deleteQueue(queueDisplayInfo.getSzCurQueueGroupA());
 		}
 		if(!queueDisplayInfo.getSzCurQueueGroupB().equals("")){
 			mTvCallB.setText(queueDisplayInfo.getSzCurQueueGroupB());
 			mTvCallBSub.setText(queueDisplayInfo.getSzCurQueueCustomerB());
-			mSpeakCallingQueue.speak(queueDisplayInfo.getSzCurQueueGroupB());
+			try {
+				mQueueProvider.addCallingQueue(queueDisplayInfo.getSzCurQueueGroupB());
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else{
+			mQueueProvider.deleteQueue(queueDisplayInfo.getSzCurQueueGroupB());
 		}
 		if(!queueDisplayInfo.getSzCurQueueGroupC().equals("")){
 			mTvCallC.setText(queueDisplayInfo.getSzCurQueueGroupC());
 			mTvCallCSub.setText(queueDisplayInfo.getSzCurQueueCustomerC());
-			mSpeakCallingQueue.speak(queueDisplayInfo.getSzCurQueueGroupC());
+			try {
+				mQueueProvider.addCallingQueue(queueDisplayInfo.getSzCurQueueGroupC());
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else{
+			mQueueProvider.deleteQueue(queueDisplayInfo.getSzCurQueueGroupC());
 		}
-		if(totalQueueA > 0)
-			mTvSumQA.setText(String.valueOf(totalQueueA));
-		if(totalQueueB > 0)
-			mTvSumQB.setText(String.valueOf(totalQueueB));
-		if(totalQueueC > 0)
-			mTvSumQC.setText(String.valueOf(totalQueueC));
+		mTvSumQA.setText(String.valueOf(totalQueueA));
+		mTvSumQB.setText(String.valueOf(totalQueueB));
+		mTvSumQC.setText(String.valueOf(totalQueueC));
 		mQueueAAdapter.notifyDataSetChanged();
 		mQueueBAdapter.notifyDataSetChanged();
 		mQueueCAdapter.notifyDataSetChanged();
+		
+		mCallingQueueCursor = mQueueProvider.getCallingQueueName();
+		if(mCallingQueueCursor.moveToFirst()){
+			mSpeakCallingQueue.speak(mCallingQueueCursor.getString(0));
+		}
 	}
 
 	@Override

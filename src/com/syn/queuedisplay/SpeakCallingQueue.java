@@ -65,7 +65,7 @@ public class SpeakCallingQueue implements OnCompletionListener, OnPreparedListen
 	}
 	
 	private void getCallingSoundPath(String queueText){
-		char[] ch = queueText.toLowerCase(Locale.getDefault()).toCharArray();
+		char[] ch = queueText.toCharArray();
 		File[] files = listFiles();
 		if(files.length > 0){
 			mSoundIdx = 0;
@@ -73,8 +73,13 @@ public class SpeakCallingQueue implements OnCompletionListener, OnPreparedListen
 			for(int i = 0; i < files.length; i++){
 				File f = files[i];
 				for(int j = 0; j < ch.length; j ++){
-					String fileName = String.valueOf(ch[j]) + MediaManager.WAV_EXTENSION;
-					if(fileName.equals(f.getName())){
+					String fileName = null;
+					if(f.getName().endsWith(MediaManager.WAV_EXTENSION))
+						fileName = String.valueOf(ch[j]) + MediaManager.WAV_EXTENSION;
+					else if(f.getName().endsWith(MediaManager.OGG_EXTENSION))
+						fileName = String.valueOf(ch[j]) + MediaManager.OGG_EXTENSION;
+					
+					if(fileName.equalsIgnoreCase(f.getName())){
 						mSoundPath[j] = f.getPath();
 					}
 				}

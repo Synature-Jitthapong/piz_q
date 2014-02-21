@@ -49,11 +49,11 @@ public class QueueApplication extends Application{
 		return url;
 	}
 	
-	public SQLiteDatabase getReadDatabase(){
+	public static SQLiteDatabase getReadDatabase(){
 		return sDatabase.getReadDatabase();
 	}
 	
-	public SQLiteDatabase getWriteDatabase(){
+	public static SQLiteDatabase getWriteDatabase(){
 		return sDatabase.getWriteDatabase();
 	}
 	

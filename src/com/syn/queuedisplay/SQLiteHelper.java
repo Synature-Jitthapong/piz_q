@@ -4,11 +4,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class SQLiteHelper extends SQLiteOpenHelper{
-	public static final String SQL_TABLE_CREATE = 
-			"CREATE TABLE CallingQueue(" + 
-			" queue_name TEXT, " +
-			" calling_time TEXT " +
-			");";
+	public static final String[] SQL_TABLE_CREATE ={
+		QueueSQL.CREATE_CALLING_QUEUE_TABLE
+	};
 	
 	public SQLiteHelper() {
 		super(QueueApplication.sContext, QueueApplication.DB_NAME, 
@@ -17,7 +15,9 @@ public class SQLiteHelper extends SQLiteOpenHelper{
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		db.execSQL(SQL_TABLE_CREATE);
+		for(String sql : SQL_TABLE_CREATE){
+			db.execSQL(sql);
+		}
 	}
 
 	@Override
