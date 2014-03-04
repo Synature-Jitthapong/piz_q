@@ -1,4 +1,4 @@
-package com.syn.queuedisplay;
+package com.syn.queuedisplay.afteryou;
 
 public interface WebServiceProgressListener {
 	void onPre();

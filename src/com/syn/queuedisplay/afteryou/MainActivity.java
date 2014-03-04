@@ -1,4 +1,4 @@
-package com.syn.queuedisplay;
+package com.syn.queuedisplay.afteryou;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -22,8 +22,10 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.webkit.WebView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -33,7 +35,7 @@ import android.widget.TextView;
  * 
  * @see SystemUiHider
  */
-public class QueueDisplayActivity extends Activity{
+public class MainActivity extends Activity{
 	/**
 	 * Whether or not the system UI should be auto-hidden after
 	 * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -94,7 +96,7 @@ public class QueueDisplayActivity extends Activity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_queue_display);
+		setContentView(R.layout.activity_main);
 		final View contentView = findViewById(R.id.headerLayout);
 		mSurface = (SurfaceView) findViewById(R.id.surfaceView1);
 		mWebView = (WebView) findViewById(R.id.webView1);
@@ -182,7 +184,7 @@ public class QueueDisplayActivity extends Activity{
 		});
 		// init media player
 		mVideoPlayer = 
-				new VideoPlayer(QueueDisplayActivity.this, mSurface, 
+				new VideoPlayer(MainActivity.this, mSurface, 
 						QueueApplication.getVDODir(), new VideoPlayer.MediaPlayerStateListener(){
 
 							@Override
@@ -202,6 +204,8 @@ public class QueueDisplayActivity extends Activity{
 							}
 					
 				});
+		
+		createMarqueeText();
 	}
 
 	@Override
@@ -239,8 +243,9 @@ public class QueueDisplayActivity extends Activity{
 		Intent intent;
 		switch (item.getItemId()) {
 		case R.id.action_settings:
-			intent = new Intent(QueueDisplayActivity.this, SettingActivity.class);
+			intent = new Intent(MainActivity.this, SettingActivity.class);
 			startActivity(intent);
+			finish();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -305,7 +310,7 @@ public class QueueDisplayActivity extends Activity{
 		@Override
 		public void run() {
 			try {
-				new QueueDisplayService(QueueDisplayActivity.this, 
+				new QueueDisplayService(MainActivity.this, 
 						mLoadQueueListener).execute(QueueApplication.getFullUrl());
 				mHandlerQueue.postDelayed(this, Long.parseLong(QueueApplication.getRefresh()));
 			} catch (Exception e) {
@@ -386,29 +391,6 @@ public class QueueDisplayActivity extends Activity{
 		if(mCallingQueueCursor.moveToFirst()){
 			mSpeakCallingQueue.speak(mCallingQueueCursor.getString(0));
 		}
-	}
-
-	@Override
-	protected void onResume() {
-		try {
-			mVideoPlayer.resume();
-			createMarqueeText();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		super.onResume();
-	}
-
-	@Override
-	protected void onPause() {
-		try {
-			mVideoPlayer.pause();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		super.onPause();
 	}
 
 	@Override

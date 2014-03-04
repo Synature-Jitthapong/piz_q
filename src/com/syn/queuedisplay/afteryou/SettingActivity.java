@@ -1,10 +1,11 @@
-package com.syn.queuedisplay;
+package com.syn.queuedisplay.afteryou;
 
 import java.util.List;
 
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Configuration;
@@ -105,8 +106,11 @@ public class SettingActivity extends PreferenceActivity{
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		Intent intent = null;
 		switch(item.getItemId()){
 		case android.R.id.home:
+			intent = new Intent(SettingActivity.this, MainActivity.class);
+			startActivity(intent);
 			finish();
 			return true;
 		default :

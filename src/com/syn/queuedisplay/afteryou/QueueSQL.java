@@ -1,4 +1,4 @@
-package com.syn.queuedisplay;
+package com.syn.queuedisplay.afteryou;
 
 public class QueueSQL {
 	public static final String CREATE_CALLING_QUEUE_TABLE =
