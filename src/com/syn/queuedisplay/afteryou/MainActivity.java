@@ -115,14 +115,14 @@ public class MainActivity extends Activity{
 		mTvPlaying = (TextView) findViewById(R.id.textViewPlaying);
 		mTvVersion = (TextView) findViewById(R.id.tvVersion);
 		
-		PackageInfo pInfo;
-		try {
-			pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-			mTvVersion.setText("v" + pInfo.versionName);
-		} catch (NameNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		PackageInfo pInfo;
+//		try {
+//			pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+//			mTvVersion.setText("v" + pInfo.versionName);
+//		} catch (NameNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		//new Thread(this).start();
 		
 		// Set up an instance of SystemUiHider to control the system UI for

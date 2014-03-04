@@ -31,7 +31,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:scaleType="fitXY"
             android:src="@drawable/header_logo" />
 
         <DigitalClock
@@ -121,7 +120,6 @@
                 android:layout_margin="0dp"
                 android:gravity="center_vertical"
                 android:padding="8dp"
-                android:text="ver"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@android:color/holo_orange_dark" />
 
