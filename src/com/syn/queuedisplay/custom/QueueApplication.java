@@ -1,4 +1,4 @@
-package com.syn.queuedisplay.afteryou;
+package com.syn.queuedisplay.custom;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -19,8 +19,6 @@ public class QueueApplication extends Application{
 	
 	public static Context sContext;
 	
-	public static QueueSQLiteDatabase sDatabase; 
-	
 	public static QueueLog sQueueLog;
 	
 	@Override
@@ -28,7 +26,6 @@ public class QueueApplication extends Application{
 		super.onCreate();
 		sContext = getApplicationContext();
 		sQueueLog = new QueueLog(sContext);
-		sDatabase = new QueueSQLiteDatabase();
 	}
 	
 	public static String getFullUrl(){
@@ -47,14 +44,6 @@ public class QueueApplication extends Application{
 			e.printStackTrace();
 		}
 		return url;
-	}
-	
-	public static SQLiteDatabase getReadDatabase(){
-		return sDatabase.getReadDatabase();
-	}
-	
-	public static SQLiteDatabase getWriteDatabase(){
-		return sDatabase.getWriteDatabase();
 	}
 	
 	public static String getRefresh(){

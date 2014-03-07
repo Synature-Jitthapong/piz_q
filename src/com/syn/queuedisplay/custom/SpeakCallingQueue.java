@@ -1,4 +1,4 @@
-package com.syn.queuedisplay.afteryou;
+package com.syn.queuedisplay.custom;
 
 import java.io.File;
 import java.io.IOException;

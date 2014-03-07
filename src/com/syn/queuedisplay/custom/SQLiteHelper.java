@@ -1,16 +1,16 @@
-package com.syn.queuedisplay.afteryou;
+package com.syn.queuedisplay.custom;
 
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class SQLiteHelper extends SQLiteOpenHelper{
+public abstract class SQLiteHelper extends SQLiteOpenHelper{
 	public static final String[] SQL_TABLE_CREATE ={
 		QueueSQL.CREATE_CALLING_QUEUE_TABLE
 	};
 	
-	public SQLiteHelper() {
-		super(QueueApplication.sContext, QueueApplication.DB_NAME, 
-				null, QueueApplication.DB_VERSION);
+	public SQLiteHelper(Context c) {
+		super(c, QueueApplication.DB_NAME, null, QueueApplication.DB_VERSION);
 	}
 
 	@Override

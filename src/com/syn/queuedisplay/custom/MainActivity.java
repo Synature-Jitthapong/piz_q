@@ -1,4 +1,4 @@
-package com.syn.queuedisplay.afteryou;
+package com.syn.queuedisplay.custom;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -155,7 +155,7 @@ public class MainActivity extends Activity{
 		});
 		
 		// init object
-		mQueueProvider = new QueueProvider(QueueApplication.getWriteDatabase());
+		mQueueProvider = new QueueProvider(QueueApplication.sContext);
 		mQueueALst = new ArrayList<QueueDisplayInfo.QueueInfo>();
 		mQueueBLst = new ArrayList<QueueDisplayInfo.QueueInfo>();
 		mQueueCLst = new ArrayList<QueueDisplayInfo.QueueInfo>();

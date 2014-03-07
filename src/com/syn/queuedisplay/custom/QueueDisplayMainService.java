@@ -1,4 +1,4 @@
-package com.syn.queuedisplay.afteryou;
+package com.syn.queuedisplay.custom;
 
 import org.ksoap2.serialization.PropertyInfo;
 import android.content.Context;

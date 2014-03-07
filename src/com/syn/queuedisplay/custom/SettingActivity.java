@@ -1,7 +1,6 @@
-package com.syn.queuedisplay.afteryou;
+package com.syn.queuedisplay.custom;
 
 import java.util.List;
-
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.content.Context;

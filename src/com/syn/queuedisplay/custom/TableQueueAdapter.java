@@ -1,8 +1,7 @@
-package com.syn.queuedisplay.afteryou;
+package com.syn.queuedisplay.custom;
+
 import java.util.List;
-
 import com.syn.pos.QueueDisplayInfo;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
