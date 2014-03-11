@@ -189,7 +189,7 @@ public class MainActivity extends Activity{
 		});
 
 		// init media player
-		mVideoPlayer = new VideoPlayer(MainActivity.this, mSurface, 
+		mVideoPlayer = new VideoPlayer(QueueApplication.sContext, mSurface, 
 				QueueApplication.getVDODir(),
 				new VideoPlayer.MediaPlayerStateListener() {
 
@@ -212,6 +212,12 @@ public class MainActivity extends Activity{
 		});
 		
 		createMarqueeText();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		mVideoPlayer.resume();
 	}
 
 	@Override
@@ -251,7 +257,6 @@ public class MainActivity extends Activity{
 		case R.id.action_settings:
 			intent = new Intent(MainActivity.this, SettingActivity.class);
 			startActivity(intent);
-			finish();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -330,7 +335,7 @@ public class MainActivity extends Activity{
 		@Override
 		public void run() {
 			try {
-				new QueueDisplayService(MainActivity.this, 
+				new QueueDisplayService(QueueApplication.sContext, 
 						mLoadQueueListener).execute(QueueApplication.getFullUrl());
 				mHandlerQueue.postDelayed(this, Long.parseLong(QueueApplication.getRefresh()));
 			} catch (Exception e) {
@@ -419,6 +424,12 @@ public class MainActivity extends Activity{
 			mQueueLst = mQueueProvider.listCallingQueueName();
 			mHandlerSpeakQueue.post(mSpeakQueueRunnable);
 		}
+	}
+
+	@Override
+	protected void onPause() {
+		mVideoPlayer.pause();
+		super.onPause();
 	}
 
 	@Override
