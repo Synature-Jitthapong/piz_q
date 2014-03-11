@@ -35,5 +35,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="load_photo">Load Photo</string>
     <string name="manage_logo">Manage Logo</string>
+    <string name="speak_time">Speak Times</string>
 
 </resources>

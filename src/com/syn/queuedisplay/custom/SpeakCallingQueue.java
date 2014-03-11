@@ -2,17 +2,13 @@ package com.syn.queuedisplay.custom;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Locale;
-
 import com.j1tth4.mobile.util.MediaManager;
-
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
 
 public class SpeakCallingQueue implements OnCompletionListener, OnPreparedListener{
-	private int mSoundIdx = -1;
-	private String[] mSoundPath;
+	private String mSoundPath;
 	private MediaManager mMediaManager;
 	private MediaPlayer mMediaPlayer;
 	private OnPlaySoundListener mOnPlaySoundListener;
@@ -32,7 +28,7 @@ public class SpeakCallingQueue implements OnCompletionListener, OnPreparedListen
 	private void playSound(){
 		try {
 			mMediaPlayer.reset();
-			mMediaPlayer.setDataSource(mSoundPath[mSoundIdx]);
+			mMediaPlayer.setDataSource(mSoundPath);
 			mMediaPlayer.prepare();
 			mMediaPlayer.setOnPreparedListener(this);
 			mMediaPlayer.setOnCompletionListener(this);
@@ -51,53 +47,21 @@ public class SpeakCallingQueue implements OnCompletionListener, OnPreparedListen
 		}
 	}
 	
-	private void getSuffixSoundPath(){
-		File[] files = listFiles();
-	}
-	
-	private void getPrefixSoundPath(){
-		
-	}
-	
 	private File[] listFiles(){
 		File sdCard = mMediaManager.getSdCard();
-		return sdCard.listFiles(new MediaManager.SoundFileExtensionFilter());
+		return sdCard.listFiles(new MediaManager.MP3ExtensionFilter());
 	}
 	
 	private void getCallingSoundPath(String queueText){
-		char[] ch = queueText.toCharArray();
 		File[] files = listFiles();
 		if(files.length > 0){
-			mSoundIdx = 0;
-			mSoundPath = new String[ch.length];
 			for(int i = 0; i < files.length; i++){
 				File f = files[i];
-				for(int j = 0; j < ch.length; j ++){
-					String fileName = null;
-					if(f.getName().endsWith(MediaManager.WAV_EXTENSION))
-						fileName = String.valueOf(ch[j]) + MediaManager.WAV_EXTENSION;
-					else if(f.getName().endsWith(MediaManager.OGG_EXTENSION))
-						fileName = String.valueOf(ch[j]) + MediaManager.OGG_EXTENSION;
-					
-					if(fileName.equalsIgnoreCase(f.getName())){
-						mSoundPath[j] = f.getPath();
-					}
+				String fileName = f.getName().replaceFirst("[.][^.]+$", "");
+				if(fileName.equalsIgnoreCase(queueText)){
+					mSoundPath = f.getPath();
 				}
 			}
-		}
-	}
-	
-	private void nextTrack(){
-		try {
-			if(mSoundIdx < (mSoundPath.length - 1)){
-				mSoundIdx++;
-				playSound();
-			}else{
-				mSoundIdx = 0;
-				mOnPlaySoundListener.onPlayComplete();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 	
@@ -113,7 +77,7 @@ public class SpeakCallingQueue implements OnCompletionListener, OnPreparedListen
 
 	@Override
 	public void onCompletion(MediaPlayer mp) {
-		nextTrack();
+		mOnPlaySoundListener.onPlayComplete();
 	}
 	
 	public static interface OnPlaySoundListener{

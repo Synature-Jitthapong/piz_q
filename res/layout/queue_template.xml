@@ -17,7 +17,6 @@
         android:gravity="center"
         android:text="Queue Name"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="28sp"
         android:textStyle="bold" />
 
     <TextView

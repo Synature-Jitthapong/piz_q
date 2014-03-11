@@ -12,16 +12,16 @@ public class QueueDisplayMainService extends DotNetWebServiceTask {
 	public QueueDisplayMainService(Context c, String method) {
 		super(c, method);
 		
-		property = new PropertyInfo();
-		property.setName(PARAM_SHOP_ID);
-		property.setValue(QueueApplication.getShopId());
-		property.setType(int.class);
-		soapRequest.addProperty(property);
+		mProperty = new PropertyInfo();
+		mProperty.setName(PARAM_SHOP_ID);
+		mProperty.setValue(QueueApplication.getShopId());
+		mProperty.setType(int.class);
+		mSoapRequest.addProperty(mProperty);
 		
-		property = new PropertyInfo();
-		property.setName(PARAM_DEVICE_CODE);
-		property.setValue(QueueApplication.getDeviceCode());
-		property.setType(String.class);
-		soapRequest.addProperty(property);
+		mProperty = new PropertyInfo();
+		mProperty.setName(PARAM_DEVICE_CODE);
+		mProperty.setValue(QueueApplication.getDeviceCode());
+		mProperty.setType(String.class);
+		mSoapRequest.addProperty(mProperty);
 	}
 }

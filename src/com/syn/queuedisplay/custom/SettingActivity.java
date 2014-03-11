@@ -2,21 +2,16 @@ package com.syn.queuedisplay.custom;
 
 import java.util.List;
 import android.annotation.TargetApi;
-import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.preference.PreferenceActivity.Header;
 import android.view.MenuItem;
 
 public class SettingActivity extends PreferenceActivity{
@@ -26,6 +21,7 @@ public class SettingActivity extends PreferenceActivity{
 	public static final String PREF_VDO_DIR = "pref_vdo_dir";
 	public static final String PREF_QUEUE_SPEAK_DIR = "pref_queue_speak_dir";
 	public static final String PREF_INFO_TEXT = "pref_info_text";
+	public static final String PREF_SPEAK_TIMES = "pref_speak_time";
 
 	private static final boolean ALWAYS_SIMPLE_PREFS = false;
 
@@ -41,13 +37,15 @@ public class SettingActivity extends PreferenceActivity{
 			return;
 		}
 		
-		addPreferencesFromResource(R.xml.setting_pref);
+		addPreferencesFromResource(R.xml.pref_conn);
+		addPreferencesFromResource(R.xml.pref_resource);
 		bindPreferenceSummaryToValue(findPreference(PREF_SHOP_ID));
 		bindPreferenceSummaryToValue(findPreference(PREF_URL));
 		bindPreferenceSummaryToValue(findPreference(PREF_REFRESH));
 		bindPreferenceSummaryToValue(findPreference(PREF_VDO_DIR));
 		bindPreferenceSummaryToValue(findPreference(PREF_QUEUE_SPEAK_DIR));
 		bindPreferenceSummaryToValue(findPreference(PREF_INFO_TEXT));
+		bindPreferenceSummaryToValue(findPreference(PREF_SPEAK_TIMES));
 	}
 
 	@Override
@@ -65,13 +63,13 @@ public class SettingActivity extends PreferenceActivity{
 				|| !isXLargeTablet(context);
 	}
 
-//	@Override
-//	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-//	public void onBuildHeaders(List<Header> target) {
-//		if (!isSimplePreferences(this)) {
-//			//loadHeadersFromResource(R.xml.pref_headers, target);
-//		}
-//	}
+	@Override
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	public void onBuildHeaders(List<Header> target) {
+		if (!isSimplePreferences(this)) {
+			loadHeadersFromResource(R.xml.pref_headers, target);
+		}
+	}
 
 	private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
 		@Override
@@ -117,12 +115,27 @@ public class SettingActivity extends PreferenceActivity{
 		}
 	}
 	
-	public static class SettingFragment extends PreferenceFragment{
+	public static class ResourceFragment extends PreferenceFragment{
+		@Override
+		public void onCreate(Bundle savedInstanceState) {
+			super.onCreate(savedInstanceState);
+			addPreferencesFromResource(R.xml.pref_resource);
+			bindPreferenceSummaryToValue(findPreference(PREF_VDO_DIR));
+			bindPreferenceSummaryToValue(findPreference(PREF_QUEUE_SPEAK_DIR));
+			bindPreferenceSummaryToValue(findPreference(PREF_INFO_TEXT));
+			bindPreferenceSummaryToValue(findPreference(PREF_SPEAK_TIMES));
+		}
+	}
+	
+	public static class ConnectionFragment extends PreferenceFragment{
 
 		@Override
 		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
-			addPreferencesFromResource(R.xml.setting_pref);
+			addPreferencesFromResource(R.xml.pref_conn);
+			bindPreferenceSummaryToValue(findPreference(PREF_SHOP_ID));
+			bindPreferenceSummaryToValue(findPreference(PREF_URL));
+			bindPreferenceSummaryToValue(findPreference(PREF_REFRESH));
 		}
 
 	}

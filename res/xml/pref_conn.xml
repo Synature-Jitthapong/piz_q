@@ -2,10 +2,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
     <PreferenceCategory android:title="@string/connection"><EditTextPreference android:title="@string/shop_id" android:key="pref_shop_id"/><EditTextPreference android:key="pref_url" android:title="@string/url" android:summary="@string/backoffice_url"/>
 </PreferenceCategory><ListPreference android:title="@string/refresh" android:key="pref_refresh" android:entries="@array/pref_refresh_name" android:entryValues="@array/pref_refresh_value" android:summary="@string/refresh_interval" android:defaultValue="10000"/>
-    <PreferenceCategory android:title="@string/resource" android:key="pref_resource"><EditTextPreference android:title="@string/vdo_dir" android:key="pref_vdo_dir" android:summary="@string/video_directory"/><EditTextPreference android:title="@string/queue_speak_dir" android:key="pref_queue_speak_dir"/>
-    <EditTextPreference android:key="pref_info_text" android:title="@string/information_text"/>
-    
-</PreferenceCategory>
     
     
 

@@ -3,17 +3,13 @@ package com.syn.queuedisplay.custom;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
 import com.j1tth4.mediaplayer.VideoPlayer;
 import com.syn.pos.QueueDisplayInfo;
+import com.syn.queuedisplay.custom.QueueProvider.CallingQueueData;
 import com.syn.queuedisplay.util.SystemUiHider;
-
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,10 +18,8 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.webkit.WebView;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -64,8 +58,10 @@ public class MainActivity extends Activity{
 	 */
 	private SystemUiHider mSystemUiHider;
 	private Handler mHandlerQueue;
+	private int mQueueIdx = -1;
+	private Handler mHandlerSpeakQueue;
 	private VideoPlayer mVideoPlayer;
-	private Cursor mCallingQueueCursor;
+	private List<CallingQueueData> mQueueLst;
 	private SpeakCallingQueue mSpeakCallingQueue;
 	private QueueProvider mQueueProvider;
 	private List<QueueDisplayInfo.QueueInfo> mQueueALst;
@@ -159,6 +155,7 @@ public class MainActivity extends Activity{
 		mQueueALst = new ArrayList<QueueDisplayInfo.QueueInfo>();
 		mQueueBLst = new ArrayList<QueueDisplayInfo.QueueInfo>();
 		mQueueCLst = new ArrayList<QueueDisplayInfo.QueueInfo>();
+		mQueueLst = new ArrayList<CallingQueueData>();
 		mQueueAAdapter = new TableQueueAdapter(this, mQueueALst);
 		mQueueBAdapter = new TableQueueAdapter(this, mQueueBLst);
 		mQueueCAdapter = new TableQueueAdapter(this, mQueueCLst);
@@ -167,6 +164,7 @@ public class MainActivity extends Activity{
 		mLvQueueC.setAdapter(mQueueCAdapter);
 		mHandlerQueue = new Handler();
 		mHandlerQueue.post(mUpdateQueue);
+		mHandlerSpeakQueue = new Handler();
 		
 		mSpeakCallingQueue = new SpeakCallingQueue(new SpeakCallingQueue.OnPlaySoundListener() {
 			
@@ -177,33 +175,41 @@ public class MainActivity extends Activity{
 			
 			@Override
 			public void onPlayComplete() {
-				if(mCallingQueueCursor.moveToNext())
-					mSpeakCallingQueue.speak(mCallingQueueCursor.getString(0));
 				mVideoPlayer.setSoundVolumn(1.0f, 1.0f);
+				if(mQueueIdx < mQueueLst.size() - 1){
+					CallingQueueData queueData = mQueueLst.get(mQueueIdx);
+					int callTimes = queueData.getCallingTime();
+					mQueueProvider.updateCallingQueue(queueData.getQueueName(), ++callTimes);
+					mHandlerSpeakQueue.post(mSpeakQueueRunnable);
+					mQueueIdx++;
+				}else{
+					mQueueIdx = -1;
+				}
 			}
 		});
+
 		// init media player
-		mVideoPlayer = 
-				new VideoPlayer(MainActivity.this, mSurface, 
-						QueueApplication.getVDODir(), new VideoPlayer.MediaPlayerStateListener(){
+		mVideoPlayer = new VideoPlayer(MainActivity.this, mSurface, 
+				QueueApplication.getVDODir(),
+				new VideoPlayer.MediaPlayerStateListener() {
 
-							@Override
-							public void onError(Exception e) {
-								try {
-									mVideoPlayer.releaseMediaPlayer();
-									mVideoPlayer.startPlayMedia();
-								} catch (Exception e1) {
-									// TODO Auto-generated catch block
-									e1.printStackTrace();
-								}
-							}
+					@Override
+					public void onError(Exception e) {
+						try {
+							mVideoPlayer.releaseMediaPlayer();
+							mVideoPlayer.startPlayMedia();
+						} catch (Exception e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
 
-							@Override
-							public void onPlayedFileName(String fileName) {
-								mTvPlaying.setText(fileName);
-							}
+					@Override
+					public void onPlayedFileName(String fileName) {
+						mTvPlaying.setText(fileName);
+					}
 					
-				});
+		});
 		
 		createMarqueeText();
 	}
@@ -284,6 +290,20 @@ public class MainActivity extends Activity{
 		mHideHandler.postDelayed(mHideRunnable, delayMillis);
 	}
 	
+	private Runnable mSpeakQueueRunnable = new Runnable(){
+
+		@Override
+		public void run() {
+			if(mQueueLst.size() > 0){
+				int callingTimesLimit = Integer.parseInt(QueueApplication.getSpeakTimes());
+				if(mQueueLst.get(mQueueIdx).getCallingTime() <= callingTimesLimit){
+					mSpeakCallingQueue.speak(mQueueLst.get(mQueueIdx).getQueueName());
+				}
+			}
+		}
+		
+	};
+	
 	private QueueDisplayService.LoadQueueListener mLoadQueueListener = 
 			new QueueDisplayService.LoadQueueListener() {
 				
@@ -303,7 +323,7 @@ public class MainActivity extends Activity{
 				public void onPost(QueueDisplayInfo queueInfo) {
 					filterQueueGroup(queueInfo);
 				}
-			};
+	};
 	
 	private Runnable mUpdateQueue = new Runnable() {
 
@@ -344,6 +364,7 @@ public class MainActivity extends Activity{
 				totalQueueC++;
 			}
 		}
+		
 		if(!queueDisplayInfo.getSzCurQueueGroupA().equals("")){
 			mTvCallA.setText(queueDisplayInfo.getSzCurQueueGroupA());
 			mTvCallASub.setText(queueDisplayInfo.getSzCurQueueCustomerA());
@@ -356,6 +377,7 @@ public class MainActivity extends Activity{
 		}else{
 			mQueueProvider.deleteQueue(queueDisplayInfo.getSzCurQueueGroupA());
 		}
+		
 		if(!queueDisplayInfo.getSzCurQueueGroupB().equals("")){
 			mTvCallB.setText(queueDisplayInfo.getSzCurQueueGroupB());
 			mTvCallBSub.setText(queueDisplayInfo.getSzCurQueueCustomerB());
@@ -368,6 +390,7 @@ public class MainActivity extends Activity{
 		}else{
 			mQueueProvider.deleteQueue(queueDisplayInfo.getSzCurQueueGroupB());
 		}
+		
 		if(!queueDisplayInfo.getSzCurQueueGroupC().equals("")){
 			mTvCallC.setText(queueDisplayInfo.getSzCurQueueGroupC());
 			mTvCallCSub.setText(queueDisplayInfo.getSzCurQueueCustomerC());
@@ -380,16 +403,21 @@ public class MainActivity extends Activity{
 		}else{
 			mQueueProvider.deleteQueue(queueDisplayInfo.getSzCurQueueGroupC());
 		}
+		
 		mTvSumQA.setText(String.valueOf(totalQueueA));
 		mTvSumQB.setText(String.valueOf(totalQueueB));
 		mTvSumQC.setText(String.valueOf(totalQueueC));
 		mQueueAAdapter.notifyDataSetChanged();
 		mQueueBAdapter.notifyDataSetChanged();
 		mQueueCAdapter.notifyDataSetChanged();
-		
-		mCallingQueueCursor = mQueueProvider.getCallingQueueName();
-		if(mCallingQueueCursor.moveToFirst()){
-			mSpeakCallingQueue.speak(mCallingQueueCursor.getString(0));
+		readCallingQueue();
+	}
+	
+	private void readCallingQueue(){
+		if(mQueueIdx == -1){
+			mQueueIdx = 0;
+			mQueueLst = mQueueProvider.listCallingQueueName();
+			mHandlerSpeakQueue.post(mSpeakQueueRunnable);
 		}
 	}
 
@@ -397,6 +425,7 @@ public class MainActivity extends Activity{
 	protected void onDestroy() {
 		try {
 			mHandlerQueue.removeCallbacks(mUpdateQueue);
+			mHandlerSpeakQueue.removeCallbacks(mSpeakQueueRunnable);
 			mVideoPlayer.releaseMediaPlayer();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

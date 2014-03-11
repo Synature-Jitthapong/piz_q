@@ -2,11 +2,9 @@ package com.syn.queuedisplay.custom;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
 import android.provider.Settings.Secure;
 
@@ -36,6 +34,8 @@ public class QueueApplication extends Application{
 		SharedPreferences sharedPref = PreferenceManager
 				.getDefaultSharedPreferences(sContext);
 		String url = sharedPref.getString(SettingActivity.PREF_URL, "");
+		if(url.equals(""))
+			return "";
 		try {
 			new URL(url);
 		} catch (MalformedURLException e) {
@@ -44,6 +44,12 @@ public class QueueApplication extends Application{
 			e.printStackTrace();
 		}
 		return url;
+	}
+	
+	public static String getSpeakTimes(){
+		SharedPreferences sharedPref = PreferenceManager
+				.getDefaultSharedPreferences(sContext);
+		return sharedPref.getString(SettingActivity.PREF_SPEAK_TIMES, "3000");
 	}
 	
 	public static String getRefresh(){
