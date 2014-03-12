@@ -44,8 +44,8 @@ public class QueueProvider extends SQLiteHelper{
 					COLUMN_CALLING_QUEUE_TIMES
 				}, null, null, null, null, null);
 		if(cursor.moveToFirst()){
-			CallingQueueData data = new CallingQueueData();
 			do{
+				CallingQueueData data = new CallingQueueData();
 				data.setQueueName(cursor.getString(cursor.getColumnIndex(COLUMN_CALLING_QUEUE_NAME)));
 				data.setCallingTime(cursor.getInt(cursor.getColumnIndex(COLUMN_CALLING_QUEUE_TIMES)));
 				queueLst.add(data);
@@ -53,6 +53,10 @@ public class QueueProvider extends SQLiteHelper{
 		}
 		cursor.close();
 		return queueLst;
+	}
+	
+	public void deleteQueue(){
+		super.getWritableDatabase().delete(TABLE_CALLING_QUEUE, null, null);
 	}
 	
 	public void deleteQueue(String queueName){
@@ -69,11 +73,15 @@ public class QueueProvider extends SQLiteHelper{
 				COLUMN_CALLING_QUEUE_NAME + "=?", new String[]{queueName});
 	}
 	
-	public void addCallingQueue(String queueName) throws SQLException{
-		deleteQueue(queueName);
-		ContentValues cv = new ContentValues();
-		cv.put(COLUMN_CALLING_QUEUE_NAME, queueName);
-		super.getWritableDatabase().insertOrThrow(TABLE_CALLING_QUEUE, null, cv);
+	public void addCallingQueue(String queueName){
+		try {
+			ContentValues cv = new ContentValues();
+			cv.put(COLUMN_CALLING_QUEUE_NAME, queueName);
+			super.getWritableDatabase().insertOrThrow(TABLE_CALLING_QUEUE, null, cv);
+		} catch (android.database.SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public static class CallingQueueData{
