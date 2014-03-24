@@ -27,7 +27,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/tvQueueName"
-        android:layout_marginBottom="1dp"
+        android:layout_marginBottom="0dp"
         android:ellipsize="marquee"
         android:fadingEdge="horizontal"
         android:gravity="center"

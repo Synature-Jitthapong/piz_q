@@ -36,5 +36,6 @@
     <string name="load_photo">Load Photo</string>
     <string name="manage_logo">Manage Logo</string>
     <string name="speak_time">Speak Times</string>
+    <string name="d">D</string>
 
 </resources>

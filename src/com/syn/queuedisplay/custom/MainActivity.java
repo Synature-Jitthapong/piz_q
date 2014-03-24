@@ -1,18 +1,26 @@
 package com.syn.queuedisplay.custom;
 
+import java.io.IOException;
+import java.lang.reflect.Type;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.j1tth4.mediaplayer.VideoPlayer;
 import com.syn.pos.QueueDisplayInfo;
 import com.syn.queuedisplay.custom.QueueProvider.CallingQueueData;
 import com.syn.queuedisplay.util.SystemUiHider;
+
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -58,17 +66,12 @@ public class MainActivity extends Activity{
 	 */
 	private SystemUiHider mSystemUiHider;
 	private Handler mHandlerQueue;
+	private Thread mConnThread;
 	private int mQueueIdx = -1;
 	private Handler mHandlerSpeakQueue;
 	private VideoPlayer mVideoPlayer;
 	private List<String> mQueueLst;
 	private SpeakCallingQueue mSpeakCallingQueue;
-	private List<QueueDisplayInfo.QueueInfo> mQueueALst;
-	private List<QueueDisplayInfo.QueueInfo> mQueueBLst;
-	private List<QueueDisplayInfo.QueueInfo> mQueueCLst;
-	private TableQueueAdapter mQueueAAdapter;
-	private TableQueueAdapter mQueueBAdapter;
-	private TableQueueAdapter mQueueCAdapter;
 	private boolean isPause = false;
 	//private ISocketConnection socketConn;
 	private SurfaceView mSurface;
@@ -150,16 +153,12 @@ public class MainActivity extends Activity{
 		});
 		
 		// init object
-		mQueueALst = new ArrayList<QueueDisplayInfo.QueueInfo>();
-		mQueueBLst = new ArrayList<QueueDisplayInfo.QueueInfo>();
-		mQueueCLst = new ArrayList<QueueDisplayInfo.QueueInfo>();
-		mQueueLst = new ArrayList<String>();
-		mQueueAAdapter = new TableQueueAdapter(this, mQueueALst);
-		mQueueBAdapter = new TableQueueAdapter(this, mQueueBLst);
-		mQueueCAdapter = new TableQueueAdapter(this, mQueueCLst);
-		mLvQueueA.setAdapter(mQueueAAdapter);
-		mLvQueueB.setAdapter(mQueueBAdapter);
-		mLvQueueC.setAdapter(mQueueCAdapter);
+		try {
+			mConnThread = new Thread(new QueueServerSocket(mServerSocketListener));
+			mConnThread.start();
+		} catch (IOException e) {
+			String err = e.getMessage();
+		}
 		mHandlerQueue = new Handler();
 		mHandlerQueue.post(mUpdateQueue);
 		mHandlerSpeakQueue = new Handler();
@@ -285,6 +284,37 @@ public class MainActivity extends Activity{
 		mHideHandler.postDelayed(mHideRunnable, delayMillis);
 	}
 	
+	private QueueServerSocket.ServerSocketListener mServerSocketListener =
+			new QueueServerSocket.ServerSocketListener() {
+				
+				@Override
+				public void onReceipt(String msg) {
+					if(msg != null){
+						Gson gson = new Gson();
+						Type type = new TypeToken<QueueDisplayInfo>() {}.getType();
+						try {
+							final QueueDisplayInfo queueDisplayInfo = 
+									(QueueDisplayInfo) gson.fromJson(msg, type);
+							runOnUiThread(new Runnable(){
+
+								@Override
+								public void run() {
+									filterQueueGroup(queueDisplayInfo);	
+								}
+								
+							});
+						} catch (Exception e) {
+							String err = e.getMessage();
+						}
+					}
+				}
+				
+				@Override
+				public void onAcceptErr(String msg) {
+					
+				}
+	};
+	
 	private Runnable mSpeakQueueRunnable = new Runnable(){
 
 		@Override
@@ -340,23 +370,22 @@ public class MainActivity extends Activity{
 		int totalQueueA = 0;
 		int totalQueueB = 0;
 		int totalQueueC = 0;
-		mQueueALst.clear();
-		mQueueBLst.clear();
-		mQueueCLst.clear();
-		mQueueLst.clear();
+		List<QueueDisplayInfo.QueueInfo> queueALst = new ArrayList<QueueDisplayInfo.QueueInfo>();
+		List<QueueDisplayInfo.QueueInfo> queueBLst = new ArrayList<QueueDisplayInfo.QueueInfo>();
+		List<QueueDisplayInfo.QueueInfo> queueCLst = new ArrayList<QueueDisplayInfo.QueueInfo>();
 		for(QueueDisplayInfo.QueueInfo queueInfo : queueDisplayInfo.xListQueueInfo){
 			if(queueInfo.getiQueueGroupID() == 1){
-				mQueueALst.add(queueInfo);
+				queueALst.add(queueInfo);
 				totalQueueA++;
 			}
 			
 			if(queueInfo.getiQueueGroupID() == 2){
-				mQueueBLst.add(queueInfo);
+				queueBLst.add(queueInfo);
 				totalQueueB++;
 			}
 			
 			if(queueInfo.getiQueueGroupID() == 3){
-				mQueueCLst.add(queueInfo);
+				queueCLst.add(queueInfo);
 				totalQueueC++;
 			}
 		}
@@ -364,40 +393,32 @@ public class MainActivity extends Activity{
 		if(!queueDisplayInfo.getSzCurQueueGroupA().equals("")){
 			mTvCallA.setText(queueDisplayInfo.getSzCurQueueGroupA());
 			mTvCallASub.setText(queueDisplayInfo.getSzCurQueueCustomerA());
-			mQueueLst.add(queueDisplayInfo.getSzCurQueueGroupA());
 		}else{
 			mTvCallA.setText("");
 			mTvCallASub.setText("");
-			mQueueLst.clear();
 		}
 		
 		if(!queueDisplayInfo.getSzCurQueueGroupB().equals("")){
 			mTvCallB.setText(queueDisplayInfo.getSzCurQueueGroupB());
 			mTvCallBSub.setText(queueDisplayInfo.getSzCurQueueCustomerB());
-			mQueueLst.add(queueDisplayInfo.getSzCurQueueGroupB());
 		}else{
 			mTvCallB.setText("");
 			mTvCallBSub.setText("");
-			mQueueLst.clear();
 		}
 		
 		if(!queueDisplayInfo.getSzCurQueueGroupC().equals("")){
 			mTvCallC.setText(queueDisplayInfo.getSzCurQueueGroupC());
 			mTvCallCSub.setText(queueDisplayInfo.getSzCurQueueCustomerC());
-			mQueueLst.add(queueDisplayInfo.getSzCurQueueGroupC());
 		}else{
 			mTvCallC.setText("");
 			mTvCallCSub.setText("");
-			mQueueLst.clear();
 		}
-		
+		mLvQueueA.setAdapter(new TableQueueAdapter(QueueApplication.sContext, queueALst));
+		mLvQueueB.setAdapter(new TableQueueAdapter(QueueApplication.sContext, queueBLst));
+		mLvQueueC.setAdapter(new TableQueueAdapter(QueueApplication.sContext, queueCLst));
 		mTvSumQA.setText(String.valueOf(totalQueueA));
 		mTvSumQB.setText(String.valueOf(totalQueueB));
 		mTvSumQC.setText(String.valueOf(totalQueueC));
-		mQueueAAdapter.notifyDataSetChanged();
-		mQueueBAdapter.notifyDataSetChanged();
-		mQueueCAdapter.notifyDataSetChanged();
-		readCallingQueue();
 	}
 	
 	private void readCallingQueue(){
@@ -410,7 +431,7 @@ public class MainActivity extends Activity{
 	@Override
 	protected void onDestroy() {
 		try {
-			mHandlerQueue.removeCallbacks(mUpdateQueue);
+			//mHandlerQueue.removeCallbacks(mUpdateQueue);
 			mHandlerSpeakQueue.removeCallbacks(mSpeakQueueRunnable);
 			mVideoPlayer.releaseMediaPlayer();
 		} catch (Exception e) {
@@ -440,76 +461,6 @@ public class MainActivity extends Activity{
 	public void videoNextClicked(final View v){
 		mVideoPlayer.next();
 	}
+
 	
-//	@Override
-//	public void run() {
-//		try {
-//			socketConn = new ClientSocket(queueData.getServerIp(), queueData.getPort());
-//			String msg;
-//			while ((msg = socketConn.receive()) != null) {
-//				Log.d("msg", msg);
-//				
-//			}
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			new Thread(this).start();
-//			e.printStackTrace();
-//		}
-//	}
-	
-//	private class MarqueeAdapter extends BaseAdapter{
-//		private LayoutInflater inflater;
-//		
-//		public MarqueeAdapter(){
-//			inflater = (LayoutInflater)
-//					QueueDisplayActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//		}
-//		
-//		@Override
-//		public int getCount() {
-//			return marqueeLst != null ? marqueeLst.size() : 0;
-//		}
-//
-//		@Override
-//		public QueueData.MarqueeText getItem(int position) {
-//			return marqueeLst.get(position);
-//		}
-//
-//		@Override
-//		public long getItemId(int position) {
-//			return position;
-//		}
-//
-//		@Override
-//		public View getView(final int position, View convertView, ViewGroup parent) {
-//			ViewHolder holder;
-//			final QueueData.MarqueeText marquee = marqueeLst.get(position);
-//			if(convertView == null){
-//				convertView = inflater.inflate(R.layout.marquee_template, null);
-//				holder = new ViewHolder();
-//				holder.tvText = (TextView) convertView.findViewById(R.id.textView1);
-//				holder.btnDel = (ImageButton) convertView.findViewById(R.id.imageButton1);
-//				convertView.setTag(holder);
-//			}else{
-//				holder = (ViewHolder) convertView.getTag();
-//			}
-//			
-//			holder.tvText.setText(marquee.getTextVal());
-//			holder.btnDel.setOnClickListener(new OnClickListener(){
-//
-//				@Override
-//				public void onClick(View v) {
-//					marqueeLst.remove(position);
-//					notifyDataSetChanged();
-//				}
-//				
-//			});
-//			return convertView;
-//		}
-//		
-//		private class ViewHolder{
-//			TextView tvText;
-//			ImageButton btnDel;
-//		}
-//	}
 }
