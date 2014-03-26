@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/MainLayout"
     android:layout_width="match_parent"
@@ -19,11 +19,13 @@
     -->
 
     <RelativeLayout
-        android:id="@+id/headerLayout"
-        android:layout_width="match_parent"
+        android:id="@+id/head"
+        android:layout_width="wrap_content"
         android:layout_height="64dp"
-        android:gravity="center_vertical"
-        android:paddingRight="8dp" >
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:minHeight="48dp" >
 
         <ImageView
             android:id="@+id/imgLogo"
@@ -43,66 +45,47 @@
             android:text="DigitalClock"
             android:textSize="32sp"
             android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvVersion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/imgLogo"
+            android:gravity="center_vertical"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@android:color/holo_orange_dark" />
     </RelativeLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_margin="8dp"
-        android:layout_weight="1"
-        android:baselineAligned="false"
-        android:orientation="horizontal" >
+        android:id="@+id/body"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/webView1"
+        android:layout_below="@+id/head" >
 
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_margin="8dp"
-            android:layout_weight="1"
-            android:gravity="center" >
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="1" >
 
             <SurfaceView
                 android:id="@+id/surfaceView1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_above="@+id/webView1"
-                android:layout_below="@+id/tvVersion" />
-
-            <ImageButton
-                android:id="@+id/btnNext"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/btnPause"
-                android:layout_toRightOf="@+id/btnPause"
-                android:onClick="videoNextClicked"
-                android:src="@android:drawable/ic_media_next"
-                android:visibility="invisible" />
-
-            <ImageButton
-                android:id="@+id/btnPause"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="23dp"
-                android:onClick="videoPauseClicked"
-                android:src="@android:drawable/ic_media_pause"
-                android:visibility="invisible" />
-
-            <ImageButton
-                android:id="@+id/btnBack"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/btnPause"
-                android:layout_toLeftOf="@+id/btnPause"
-                android:onClick="videoBackClicked"
-                android:src="@android:drawable/ic_media_previous"
-                android:visibility="invisible" />
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true" />
 
             <TextView
                 android:id="@+id/textViewPlaying"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
+                android:layout_alignBottom="@+id/surfaceView1"
                 android:layout_centerHorizontal="true"
                 android:ellipsize="marquee"
                 android:lines="1"
@@ -111,38 +94,43 @@
                 android:singleLine="true"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
-            <TextView
-                android:id="@+id/tvVersion"
-                style="@style/ColumnHeader"
-                android:layout_width="match_parent"
+            <ImageButton
+                android:id="@+id/btnPause"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:layout_margin="0dp"
-                android:gravity="center_vertical"
-                android:padding="8dp"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@android:color/holo_orange_dark"
-                android:visibility="gone" />
+                android:layout_alignTop="@+id/btnBack"
+                android:layout_centerHorizontal="true"
+                android:onClick="videoPauseClicked"
+                android:src="@android:drawable/ic_media_pause"
+                android:visibility="invisible" />
 
-            <WebView
-                android:id="@+id/webView1"
-                android:layout_width="match_parent"
+            <ImageButton
+                android:id="@+id/btnBack"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentRight="true" />
+                android:layout_above="@+id/textViewPlaying"
+                android:layout_toLeftOf="@+id/btnPause"
+                android:onClick="videoBackClicked"
+                android:src="@android:drawable/ic_media_previous"
+                android:visibility="invisible" />
+
+            <ImageButton
+                android:id="@+id/btnNext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/textViewPlaying"
+                android:layout_toRightOf="@+id/btnPause"
+                android:onClick="videoNextClicked"
+                android:src="@android:drawable/ic_media_next"
+                android:visibility="invisible" />
         </RelativeLayout>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginBottom="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_weight="0.5"
-            android:baselineAligned="false"
-            android:minWidth="340dp" >
+            android:layout_margin="8dp"
+            android:layout_weight="0.8"
+            android:orientation="horizontal" >
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -150,62 +138,56 @@
                 android:layout_weight="1"
                 android:orientation="vertical" >
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
-
-                    <TextView
-                        android:id="@+id/textView2"
-                        style="@style/ColumnHeader"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="@string/a"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <LinearLayout
+                <TextView
+                    android:id="@+id/textView2"
+                    style="@style/ColumnHeader"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical" >
+                    android:gravity="center"
+                    android:text="@string/a"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/tvCallA"
-                        style="@style/SubHead"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="0dp"
-                        android:ellipsize="marquee"
-                        android:gravity="center"
-                        android:lines="1"
-                        android:marqueeRepeatLimit="marquee_forever"
-                        android:scrollHorizontally="true"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:textColor="@android:color/holo_orange_dark"
-                        android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/tvCallA"
+                    style="@style/SubHead"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="0dp"
+                    android:ellipsize="marquee"
+                    android:gravity="center"
+                    android:lines="1"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:scrollHorizontally="true"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="@android:color/holo_orange_dark"
+                    android:textSize="48sp"
+                    android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/tvCallASub"
-                        style="@style/SubHead"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="marquee"
-                        android:fadingEdge="horizontal"
-                        android:gravity="center"
-                        android:lines="1"
-                        android:marqueeRepeatLimit="marquee_forever"
-                        android:scrollHorizontally="true"
-                        android:singleLine="true"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:textSize="14sp" />
-                </LinearLayout>
-				
+                <TextView
+                    android:id="@+id/tvCallASub"
+                    style="@style/SubHead"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="marquee"
+                    android:fadingEdge="horizontal"
+                    android:gravity="center"
+                    android:lines="1"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:paddingBottom="4dp"
+                    android:paddingTop="0dp"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textSize="14sp" />
+
                 <ListView
                     android:id="@+id/lvQueueA"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" >
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:divider="@null"
+                    android:dividerHeight="1dp" >
                 </ListView>
 
                 <TextView
@@ -226,61 +208,55 @@
                 android:layout_weight="1"
                 android:orientation="vertical" >
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
-
-                    <TextView
-                        android:id="@+id/textView3"
-                        style="@style/ColumnHeader"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="@string/b"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <LinearLayout
+                <TextView
+                    android:id="@+id/textView3"
+                    style="@style/ColumnHeader"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical" >
+                    android:gravity="center"
+                    android:text="@string/b"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/tvCallB"
-                        style="@style/SubHead"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="0dp"
-                        android:ellipsize="marquee"
-                        android:gravity="center"
-                        android:lines="1"
-                        android:marqueeRepeatLimit="marquee_forever"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:textColor="@android:color/holo_orange_dark"
-                        android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/tvCallB"
+                    style="@style/SubHead"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="0dp"
+                    android:ellipsize="marquee"
+                    android:gravity="center"
+                    android:lines="1"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="@android:color/holo_orange_dark"
+                    android:textSize="48sp"
+                    android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/tvCallBSub"
-                        style="@style/SubHead"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="marquee"
-                        android:fadingEdge="horizontal"
-                        android:gravity="center"
-                        android:lines="1"
-                        android:marqueeRepeatLimit="marquee_forever"
-                        android:scrollHorizontally="true"
-                        android:singleLine="true"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:textSize="14sp" />
-                </LinearLayout>
+                <TextView
+                    android:id="@+id/tvCallBSub"
+                    style="@style/SubHead"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="marquee"
+                    android:fadingEdge="horizontal"
+                    android:gravity="center"
+                    android:lines="1"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:paddingBottom="4dp"
+                    android:paddingTop="0dp"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textSize="14sp" />
 
                 <ListView
                     android:id="@+id/lvQueueB"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" >
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:divider="@null"
+                    android:dividerHeight="1dp" >
                 </ListView>
 
                 <TextView
@@ -300,65 +276,58 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:baselineAligned="false"
                 android:orientation="vertical" >
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
-
-                    <TextView
-                        android:id="@+id/textView4"
-                        style="@style/ColumnHeader"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="@string/c"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <LinearLayout
+                <TextView
+                    android:id="@+id/textView4"
+                    style="@style/ColumnHeader"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical" >
+                    android:gravity="center"
+                    android:text="@string/c"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/tvCallC"
-                        style="@style/SubHead"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="0dp"
-                        android:ellipsize="marquee"
-                        android:gravity="center"
-                        android:lines="1"
-                        android:marqueeRepeatLimit="marquee_forever"
-                        android:scrollHorizontally="true"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:textColor="@android:color/holo_orange_dark"
-                        android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/tvCallC"
+                    style="@style/SubHead"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="0dp"
+                    android:ellipsize="marquee"
+                    android:gravity="center"
+                    android:lines="1"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:scrollHorizontally="true"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="@android:color/holo_orange_dark"
+                    android:textSize="48sp"
+                    android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/tvCallCSub"
-                        style="@style/SubHead"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="marquee"
-                        android:fadingEdge="horizontal"
-                        android:gravity="center"
-                        android:lines="1"
-                        android:marqueeRepeatLimit="marquee_forever"
-                        android:scrollHorizontally="true"
-                        android:singleLine="true"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:textSize="14sp" />
-                </LinearLayout>
+                <TextView
+                    android:id="@+id/tvCallCSub"
+                    style="@style/SubHead"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="marquee"
+                    android:fadingEdge="horizontal"
+                    android:gravity="center"
+                    android:lines="1"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:paddingBottom="4dp"
+                    android:paddingTop="0dp"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textSize="14sp" />
 
                 <ListView
                     android:id="@+id/lvQueueC"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" >
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:divider="@null"
+                    android:dividerHeight="1dp" >
                 </ListView>
 
                 <TextView
@@ -378,68 +347,61 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:baselineAligned="false"
                 android:orientation="vertical" >
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
-
-                    <TextView
-                        android:id="@+id/TextView03"
-                        style="@style/ColumnHeader"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="0dp"
-                        android:gravity="center"
-                        android:text="@string/d"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <LinearLayout
+                <TextView
+                    android:id="@+id/TextView03"
+                    style="@style/ColumnHeader"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical" >
+                    android:layout_marginRight="0dp"
+                    android:gravity="center"
+                    android:text="@string/d"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/tvCallD"
-                        style="@style/SubHead"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="0dp"
-                        android:layout_marginRight="0dp"
-                        android:ellipsize="marquee"
-                        android:gravity="center"
-                        android:lines="1"
-                        android:marqueeRepeatLimit="marquee_forever"
-                        android:scrollHorizontally="true"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:textColor="@android:color/holo_orange_dark"
-                        android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/tvCallD"
+                    style="@style/SubHead"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="0dp"
+                    android:layout_marginRight="0dp"
+                    android:ellipsize="marquee"
+                    android:gravity="center"
+                    android:lines="1"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:scrollHorizontally="true"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="@android:color/holo_orange_dark"
+                    android:textSize="48sp"
+                    android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/tvCallDSub"
-                        style="@style/SubHead"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="0dp"
-                        android:ellipsize="marquee"
-                        android:fadingEdge="horizontal"
-                        android:gravity="center"
-                        android:lines="1"
-                        android:marqueeRepeatLimit="marquee_forever"
-                        android:scrollHorizontally="true"
-                        android:singleLine="true"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:textSize="14sp" />
-                </LinearLayout>
+                <TextView
+                    android:id="@+id/tvCallDSub"
+                    style="@style/SubHead"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="0dp"
+                    android:ellipsize="marquee"
+                    android:fadingEdge="horizontal"
+                    android:gravity="center"
+                    android:lines="1"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:paddingBottom="4dp"
+                    android:paddingTop="0dp"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textSize="14sp" />
 
                 <ListView
                     android:id="@+id/lvQueueD"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" >
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:divider="@null"
+                    android:dividerHeight="1dp" >
                 </ListView>
 
                 <TextView
@@ -454,8 +416,16 @@
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:textStyle="bold" />
             </LinearLayout>
-
         </LinearLayout>
     </LinearLayout>
 
-</LinearLayout>
+    <WebView
+        android:id="@+id/webView1"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:background="@color/main_background" />
+
+</RelativeLayout>

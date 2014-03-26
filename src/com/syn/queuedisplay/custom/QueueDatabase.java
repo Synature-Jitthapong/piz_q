@@ -6,11 +6,11 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-public class QueueProvider{
+public class QueueDatabase{
 	
 	private SQLiteDatabase mSqlite;
 	
-	public QueueProvider(SQLiteDatabase sqlite) {
+	public QueueDatabase(SQLiteDatabase sqlite) {
 		mSqlite = sqlite;
 	}
 
@@ -32,14 +32,15 @@ public class QueueProvider{
 		return data;
 	}
 	
-	public List<CallingQueueData> listCallingQueueName(){
+	public List<CallingQueueData> listCallingQueueName(int callingTime){
 		List<CallingQueueData> queueLst = new ArrayList<CallingQueueData>();
 		Cursor cursor = mSqlite.query(
 				QueueEntry.TABLE_CALLING_QUEUE,
 				new String[]{
 						QueueEntry.COLUMN_CALLING_QUEUE_NAME,
 						QueueEntry.COLUMN_CALLING_QUEUE_TIMES
-				}, null, null, null, null, null);
+				}, QueueEntry.COLUMN_CALLING_QUEUE_TIMES + "<?", 
+				new String[]{String.valueOf(callingTime)}, null, null, null);
 		if(cursor.moveToFirst()){
 			do{
 				CallingQueueData data = new CallingQueueData();

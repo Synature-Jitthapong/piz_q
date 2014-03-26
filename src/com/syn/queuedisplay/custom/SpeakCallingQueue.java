@@ -72,16 +72,16 @@ public class SpeakCallingQueue implements OnCompletionListener, OnPreparedListen
 	@Override
 	public void onPrepared(MediaPlayer mp) {
 		startPlayback(); 
-		mOnPlaySoundListener.onStartPlay();
+		mOnPlaySoundListener.onSpeaking();
 	}
 
 	@Override
 	public void onCompletion(MediaPlayer mp) {
-		mOnPlaySoundListener.onPlayComplete();
+		mOnPlaySoundListener.onSpeakComplete();
 	}
 	
 	public static interface OnPlaySoundListener{
-		void onStartPlay();
-		void onPlayComplete();
+		void onSpeaking();
+		void onSpeakComplete();
 	}
 }

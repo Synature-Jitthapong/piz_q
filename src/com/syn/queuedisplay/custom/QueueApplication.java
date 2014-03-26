@@ -5,6 +5,7 @@ import java.net.URL;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
 import android.provider.Settings.Secure;
 
@@ -19,11 +20,14 @@ public class QueueApplication extends Application{
 	
 	public static QueueLog sQueueLog;
 	
+	private static SQLiteHelper sSQLiteHelper;
+	
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		sContext = getApplicationContext();
 		sQueueLog = new QueueLog(sContext);
+		sSQLiteHelper = new SQLiteHelper(sContext, DB_NAME, DB_VERSION);
 	}
 	
 	public static String getFullUrl(){
@@ -44,6 +48,14 @@ public class QueueApplication extends Application{
 			e.printStackTrace();
 		}
 		return url;
+	}
+	
+	public static SQLiteDatabase getReadableDatabase(){
+		return sSQLiteHelper.getReadableDatabase();
+	}
+	
+	public static SQLiteDatabase getWritableDatabase(){
+		return sSQLiteHelper.getWritableDatabase();
 	}
 	
 	public static String getSpeakTimes(){

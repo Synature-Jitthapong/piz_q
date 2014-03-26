@@ -1,6 +1,6 @@
 <resources>
-    <color name="dark_blue">#441E4B77</color>
-    <color name="darker_blue">#44152D44</color>
-    <color name="darkes_blue">#22193A5C</color>
-    <color name="dark_blue_green">#44194B5C</color>
+<color name="main_background">#FF2C3540</color>
+<color name="header">#33192026</color>
+<color name="sub_header">#3300BF90</color>
+<color name="detail">#332C58A1</color>
 </resources>

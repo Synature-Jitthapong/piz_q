@@ -1,7 +1,7 @@
 package com.syn.queuedisplay.custom;
 
-import com.syn.queuedisplay.custom.QueueProvider.QueueColumnsEntry;
-import com.syn.queuedisplay.custom.QueueProvider.QueueEntry;
+import com.syn.queuedisplay.custom.QueueDatabase.QueueColumnsEntry;
+import com.syn.queuedisplay.custom.QueueDatabase.QueueEntry;
 
 public class QueueSQL {
 	public static final String QUEUE_COLUMNS_SQL = 

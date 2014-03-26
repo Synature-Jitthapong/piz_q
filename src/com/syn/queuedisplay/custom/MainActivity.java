@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.j1tth4.mediaplayer.VideoPlayer;
 import com.syn.pos.QueueDisplayInfo;
+import com.syn.queuedisplay.custom.QueueDatabase.CallingQueueData;
 import com.syn.queuedisplay.util.SystemUiHider;
 
 import android.annotation.TargetApi;
@@ -33,7 +34,7 @@ import android.widget.TextView;
  * 
  * @see SystemUiHider
  */
-public class MainActivity extends Activity implements QueueServerSocket.ServerSocketListener,
+public class MainActivity extends Activity implements Runnable, QueueServerSocket.ServerSocketListener,
 	SpeakCallingQueue.OnPlaySoundListener, VideoPlayer.MediaPlayerStateListener{
 	/**
 	 * Whether or not the system UI should be auto-hidden after
@@ -61,15 +62,18 @@ public class MainActivity extends Activity implements QueueServerSocket.ServerSo
 	/**
 	 * The instance of the {@link SystemUiHider} for this activity.
 	 */
-	private int mQueueIdx = -1;
-	private boolean isPause = false;
+	private static final int SPEAK_DELAY = 5000;
 	
+	private int mQueueIdx = -1;
+	private boolean mIsPause = false;
+	private QueueDatabase mQueueDatabase;
 	private SystemUiHider mSystemUiHider;
 	private Handler mHandlerQueue;
 	private Thread mConnThread;
+	private Thread mLoadCallingQueueThread;
 	private Handler mHandlerSpeakQueue;
 	private VideoPlayer mVideoPlayer;
-	private List<String> mQueueLst;
+	private List<CallingQueueData> mCallingQueueLst;
 	private SpeakCallingQueue mSpeakCallingQueue;
 	private SurfaceView mSurface;
 	private WebView mWebView;
@@ -92,7 +96,6 @@ public class MainActivity extends Activity implements QueueServerSocket.ServerSo
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		final View contentView = findViewById(R.id.headerLayout);
 		mSurface = (SurfaceView) findViewById(R.id.surfaceView1);
 		mWebView = (WebView) findViewById(R.id.webView1);
 		mLvQueueA = (ListView) findViewById(R.id.lvQueueA);
@@ -122,7 +125,8 @@ public class MainActivity extends Activity implements QueueServerSocket.ServerSo
 		
 		// Set up an instance of SystemUiHider to control the system UI for
 		// this activity.
-		mSystemUiHider = SystemUiHider.getInstance(this, contentView,
+		final View head = findViewById(R.id.head);
+		mSystemUiHider = SystemUiHider.getInstance(this, head,
 				HIDER_FLAGS);
 		mSystemUiHider.setup();
 		mSystemUiHider
@@ -138,7 +142,7 @@ public class MainActivity extends Activity implements QueueServerSocket.ServerSo
 				});
 
 		// Set up the user interaction to manually show or hide the system UI.
-		contentView.setOnClickListener(new View.OnClickListener() {
+		head.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
 				if (TOGGLE_ON_CLICK) {
@@ -151,8 +155,12 @@ public class MainActivity extends Activity implements QueueServerSocket.ServerSo
 		// init object
 		mHandlerQueue = new Handler();
 		mHandlerQueue.post(mUpdateQueue);
+		mQueueDatabase = new QueueDatabase(QueueApplication.getWritableDatabase());
+		mQueueDatabase.deleteQueue();
 		mHandlerSpeakQueue = new Handler();
 		mSpeakCallingQueue = new SpeakCallingQueue(this);
+		mLoadCallingQueueThread = new Thread(this);
+		mLoadCallingQueueThread.start();
 		try {
 			mConnThread = new Thread(new QueueServerSocket(this));
 			mConnThread.start();
@@ -180,9 +188,11 @@ public class MainActivity extends Activity implements QueueServerSocket.ServerSo
 		if (!QueueApplication.getInfoText().equals("")) {
 			mWebView.setVisibility(View.VISIBLE);
 			StringBuilder strHtml = new StringBuilder();
-			strHtml.append("<html><body style=\"background:#000;\"><FONT COLOR=\"#FFF\"><marquee direction=\"Left\" style=\"width: auto;\" >");
+			strHtml.append("<body style=\"margin:0; padding:0; background:#2C3540; \">");
+			strHtml.append("<marquee direction=\"left\" style=\"color:#f0f0f0; width: auto;\" >");
 			strHtml.append(QueueApplication.getInfoText());
-			strHtml.append("</marquee></FONT></body></html>");
+			strHtml.append("</marquee>");
+			strHtml.append("</body>");
 			mWebView.setVisibility(View.VISIBLE);
 			mWebView.loadData(strHtml.toString(), "text/html", "UTF-8");
 		} else {
@@ -246,11 +256,11 @@ public class MainActivity extends Activity implements QueueServerSocket.ServerSo
 
 		@Override
 		public void run() {
-			if(mQueueLst.size() > 0){
-				//int callingTimesLimit = Integer.parseInt(QueueApplication.getSpeakTimes());
-				//if(mQueueLst.get(mQueueIdx).getCallingTime() <= callingTimesLimit){
-					mSpeakCallingQueue.speak(mQueueLst.get(mQueueIdx));
-				//}
+			if(mCallingQueueLst.size() > 0){
+				CallingQueueData q = mCallingQueueLst.get(mQueueIdx);
+				int callingTime = q.getCallingTime();
+				mSpeakCallingQueue.speak(q.getQueueName());
+				mQueueDatabase.updateCallingQueue(q.getQueueName(), ++callingTime);
 			}
 		}
 		
@@ -320,6 +330,7 @@ public class MainActivity extends Activity implements QueueServerSocket.ServerSo
 		if(!queueDisplayInfo.getSzCurQueueGroupA().equals("")){
 			mTvCallA.setText(queueDisplayInfo.getSzCurQueueGroupA());
 			mTvCallASub.setText(queueDisplayInfo.getSzCurQueueCustomerA());
+			mQueueDatabase.addCallingQueue(queueDisplayInfo.getSzCurQueueGroupA());
 		}else{
 			mTvCallA.setText("");
 			mTvCallASub.setText("");
@@ -328,6 +339,7 @@ public class MainActivity extends Activity implements QueueServerSocket.ServerSo
 		if(!queueDisplayInfo.getSzCurQueueGroupB().equals("")){
 			mTvCallB.setText(queueDisplayInfo.getSzCurQueueGroupB());
 			mTvCallBSub.setText(queueDisplayInfo.getSzCurQueueCustomerB());
+			mQueueDatabase.addCallingQueue(queueDisplayInfo.getSzCurQueueGroupB());
 		}else{
 			mTvCallB.setText("");
 			mTvCallBSub.setText("");
@@ -336,6 +348,7 @@ public class MainActivity extends Activity implements QueueServerSocket.ServerSo
 		if(!queueDisplayInfo.getSzCurQueueGroupC().equals("")){
 			mTvCallC.setText(queueDisplayInfo.getSzCurQueueGroupC());
 			mTvCallCSub.setText(queueDisplayInfo.getSzCurQueueCustomerC());
+			mQueueDatabase.addCallingQueue(queueDisplayInfo.getSzCurQueueGroupC());
 		}else{
 			mTvCallC.setText("");
 			mTvCallCSub.setText("");
@@ -346,13 +359,6 @@ public class MainActivity extends Activity implements QueueServerSocket.ServerSo
 		mTvSumQA.setText(String.valueOf(totalQueueA));
 		mTvSumQB.setText(String.valueOf(totalQueueB));
 		mTvSumQC.setText(String.valueOf(totalQueueC));
-	}
-	
-	private void readCallingQueue(){
-		if(mQueueIdx == -1){
-			mQueueIdx = 0;
-			mHandlerSpeakQueue.post(mSpeakQueueRunnable);
-		}
 	}
 
 	@Override
@@ -373,15 +379,15 @@ public class MainActivity extends Activity implements QueueServerSocket.ServerSo
 	}
 	
 	public void videoPauseClicked(final View v){
-		if(!isPause){
+		if(!mIsPause){
 			mVideoPlayer.pause();
 			((ImageButton)v).setImageResource(android.R.drawable.ic_media_play);
-			isPause = true;
+			mIsPause = true;
 		}
 		else{
 			mVideoPlayer.resume();
 			((ImageButton)v).setImageResource(android.R.drawable.ic_media_pause);
-			isPause = false;
+			mIsPause = false;
 		}
 	}
 	
@@ -414,15 +420,15 @@ public class MainActivity extends Activity implements QueueServerSocket.ServerSo
 	}
 
 	@Override
-	public void onStartPlay() {
+	public void onSpeaking() {
 		mVideoPlayer.setSoundVolumn(0.0f, 0.0f);
 	}
 
 	@Override
-	public void onPlayComplete() {
+	public void onSpeakComplete() {
 		mVideoPlayer.setSoundVolumn(1.0f, 1.0f);
-		if(mQueueIdx < mQueueLst.size() - 1){
-			mHandlerSpeakQueue.post(mSpeakQueueRunnable);
+		if(mQueueIdx < mCallingQueueLst.size() - 1){
+			mHandlerSpeakQueue.postDelayed(mSpeakQueueRunnable, SPEAK_DELAY);
 			mQueueIdx++;
 		}else{
 			mQueueIdx = -1;
@@ -442,6 +448,20 @@ public class MainActivity extends Activity implements QueueServerSocket.ServerSo
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
+		}
+	}
+
+	@Override
+	public void run() {
+		while(true){
+			if(mQueueIdx == -1){
+				mCallingQueueLst = mQueueDatabase.listCallingQueueName(
+						Integer.parseInt(QueueApplication.getSpeakTimes()));
+				if(mCallingQueueLst.size() > 0){
+					mQueueIdx = 0;
+					mHandlerSpeakQueue.postDelayed(mSpeakQueueRunnable, SPEAK_DELAY);
+				}
+			}
 		}
 	}
 }
