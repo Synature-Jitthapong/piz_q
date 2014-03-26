@@ -2,7 +2,6 @@ package com.syn.queuedisplay.custom;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,17 +9,14 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.j1tth4.mediaplayer.VideoPlayer;
 import com.syn.pos.QueueDisplayInfo;
-import com.syn.queuedisplay.custom.QueueProvider.CallingQueueData;
 import com.syn.queuedisplay.util.SystemUiHider;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -37,7 +33,8 @@ import android.widget.TextView;
  * 
  * @see SystemUiHider
  */
-public class MainActivity extends Activity{
+public class MainActivity extends Activity implements QueueServerSocket.ServerSocketListener,
+	SpeakCallingQueue.OnPlaySoundListener, VideoPlayer.MediaPlayerStateListener{
 	/**
 	 * Whether or not the system UI should be auto-hidden after
 	 * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -64,16 +61,16 @@ public class MainActivity extends Activity{
 	/**
 	 * The instance of the {@link SystemUiHider} for this activity.
 	 */
+	private int mQueueIdx = -1;
+	private boolean isPause = false;
+	
 	private SystemUiHider mSystemUiHider;
 	private Handler mHandlerQueue;
 	private Thread mConnThread;
-	private int mQueueIdx = -1;
 	private Handler mHandlerSpeakQueue;
 	private VideoPlayer mVideoPlayer;
 	private List<String> mQueueLst;
 	private SpeakCallingQueue mSpeakCallingQueue;
-	private boolean isPause = false;
-	//private ISocketConnection socketConn;
 	private SurfaceView mSurface;
 	private WebView mWebView;
 	private ListView mLvQueueA;
@@ -151,60 +148,21 @@ public class MainActivity extends Activity{
 				}
 			}
 		});
-		
 		// init object
-		try {
-			mConnThread = new Thread(new QueueServerSocket(mServerSocketListener));
-			mConnThread.start();
-		} catch (IOException e) {
-			String err = e.getMessage();
-		}
 		mHandlerQueue = new Handler();
 		mHandlerQueue.post(mUpdateQueue);
 		mHandlerSpeakQueue = new Handler();
-		
-		mSpeakCallingQueue = new SpeakCallingQueue(new SpeakCallingQueue.OnPlaySoundListener() {
-			
-			@Override
-			public void onStartPlay() {
-				mVideoPlayer.setSoundVolumn(0.0f, 0.0f);
-			}
-			
-			@Override
-			public void onPlayComplete() {
-				mVideoPlayer.setSoundVolumn(1.0f, 1.0f);
-				if(mQueueIdx < mQueueLst.size() - 1){
-					mHandlerSpeakQueue.post(mSpeakQueueRunnable);
-					mQueueIdx++;
-				}else{
-					mQueueIdx = -1;
-				}
-			}
-		});
-
+		mSpeakCallingQueue = new SpeakCallingQueue(this);
+		try {
+			mConnThread = new Thread(new QueueServerSocket(this));
+			mConnThread.start();
+		} catch (IOException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
 		// init media player
 		mVideoPlayer = new VideoPlayer(QueueApplication.sContext, mSurface, 
-				QueueApplication.getVDODir(),
-				new VideoPlayer.MediaPlayerStateListener() {
-
-					@Override
-					public void onError(Exception e) {
-						try {
-							mVideoPlayer.releaseMediaPlayer();
-							mVideoPlayer.startPlayMedia();
-						} catch (Exception e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-					}
-
-					@Override
-					public void onPlayedFileName(String fileName) {
-						mTvPlaying.setText(fileName);
-					}
-					
-		});
-		
+				QueueApplication.getVDODir(), this);
 		createMarqueeText();
 	}
 
@@ -283,37 +241,6 @@ public class MainActivity extends Activity{
 		mHideHandler.removeCallbacks(mHideRunnable);
 		mHideHandler.postDelayed(mHideRunnable, delayMillis);
 	}
-	
-	private QueueServerSocket.ServerSocketListener mServerSocketListener =
-			new QueueServerSocket.ServerSocketListener() {
-				
-				@Override
-				public void onReceipt(String msg) {
-					if(msg != null){
-						Gson gson = new Gson();
-						Type type = new TypeToken<QueueDisplayInfo>() {}.getType();
-						try {
-							final QueueDisplayInfo queueDisplayInfo = 
-									(QueueDisplayInfo) gson.fromJson(msg, type);
-							runOnUiThread(new Runnable(){
-
-								@Override
-								public void run() {
-									filterQueueGroup(queueDisplayInfo);	
-								}
-								
-							});
-						} catch (Exception e) {
-							String err = e.getMessage();
-						}
-					}
-				}
-				
-				@Override
-				public void onAcceptErr(String msg) {
-					
-				}
-	};
 	
 	private Runnable mSpeakQueueRunnable = new Runnable(){
 
@@ -462,5 +389,59 @@ public class MainActivity extends Activity{
 		mVideoPlayer.next();
 	}
 
-	
+	@Override
+	public void onReceipt(String msg) {
+		Gson gson = new Gson();
+		Type type = new TypeToken<QueueDisplayInfo>() {}.getType();
+		try {
+			final QueueDisplayInfo queueDisplayInfo = 
+					(QueueDisplayInfo) gson.fromJson(msg, type);
+			runOnUiThread(new Runnable(){
+
+				@Override
+				public void run() {
+					filterQueueGroup(queueDisplayInfo);	
+				}
+				
+			});
+		} catch (Exception e) {
+		}
+	}
+
+	@Override
+	public void onAcceptErr(String msg) {
+		
+	}
+
+	@Override
+	public void onStartPlay() {
+		mVideoPlayer.setSoundVolumn(0.0f, 0.0f);
+	}
+
+	@Override
+	public void onPlayComplete() {
+		mVideoPlayer.setSoundVolumn(1.0f, 1.0f);
+		if(mQueueIdx < mQueueLst.size() - 1){
+			mHandlerSpeakQueue.post(mSpeakQueueRunnable);
+			mQueueIdx++;
+		}else{
+			mQueueIdx = -1;
+		}
+	}
+
+	@Override
+	public void onPlayedFileName(String fileName) {
+		mTvPlaying.setText(fileName);
+	}
+
+	@Override
+	public void onError(Exception e) {
+		try {
+			mVideoPlayer.releaseMediaPlayer();
+			mVideoPlayer.startPlayMedia();
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
 }

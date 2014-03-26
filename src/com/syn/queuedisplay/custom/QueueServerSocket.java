@@ -25,7 +25,8 @@ public class QueueServerSocket implements Runnable{
 				if(socket == null)
 					socket = mSocket.accept();
 				BufferedReader bf = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-				mListener.onReceipt(bf.readLine());
+				if(bf != null)
+					mListener.onReceipt(bf.readLine());
 			} catch (IOException e) {
 				mListener.onAcceptErr(e.getMessage());
 			}

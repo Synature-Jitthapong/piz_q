@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+     <PreferenceCategory android:title="@string/general">
+        <EditTextPreference android:title="@string/queue_columns" 
+            android:key="pref_queue_columns"
+            android:defaultValue="3"/>
+     </PreferenceCategory>
+</PreferenceScreen>

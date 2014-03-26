@@ -22,6 +22,7 @@ public class SettingActivity extends PreferenceActivity{
 	public static final String PREF_QUEUE_SPEAK_DIR = "pref_queue_speak_dir";
 	public static final String PREF_INFO_TEXT = "pref_info_text";
 	public static final String PREF_SPEAK_TIMES = "pref_speak_time";
+	public static final String PREF_QUEUE_COLUMNS = "pref_queue_columns";
 
 	private static final boolean ALWAYS_SIMPLE_PREFS = false;
 
@@ -38,6 +39,7 @@ public class SettingActivity extends PreferenceActivity{
 		}
 		
 		addPreferencesFromResource(R.xml.pref_conn);
+		addPreferencesFromResource(R.xml.pref_general);
 		addPreferencesFromResource(R.xml.pref_resource);
 		bindPreferenceSummaryToValue(findPreference(PREF_SHOP_ID));
 		bindPreferenceSummaryToValue(findPreference(PREF_URL));
@@ -46,6 +48,7 @@ public class SettingActivity extends PreferenceActivity{
 		bindPreferenceSummaryToValue(findPreference(PREF_QUEUE_SPEAK_DIR));
 		bindPreferenceSummaryToValue(findPreference(PREF_INFO_TEXT));
 		bindPreferenceSummaryToValue(findPreference(PREF_SPEAK_TIMES));
+		bindPreferenceSummaryToValue(findPreference(PREF_QUEUE_COLUMNS));
 	}
 
 	@Override
@@ -54,7 +57,7 @@ public class SettingActivity extends PreferenceActivity{
 	}
 
 	private static boolean isXLargeTablet(Context context) {
-		return (context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE;
+		return (context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE;
 	}
 
 	private static boolean isSimplePreferences(Context context) {
@@ -112,6 +115,20 @@ public class SettingActivity extends PreferenceActivity{
 			return true;
 		default :
 			return super.onOptionsItemSelected(item);
+		}
+	}
+	
+	public static class GeneralFragment extends PreferenceFragment{
+
+		@Override
+		public void onCreate(Bundle savedInstanceState) {
+			super.onCreate(savedInstanceState);
+			addPreferencesFromResource(R.xml.pref_general);
+			bindPreferenceSummaryToValue(findPreference(PREF_QUEUE_COLUMNS));
+		}
+		
+		public static void insertQueueColumn(){
+			
 		}
 	}
 	

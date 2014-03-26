@@ -37,5 +37,6 @@
     <string name="manage_logo">Manage Logo</string>
     <string name="speak_time">Speak Times</string>
     <string name="d">D</string>
-
+    <string name="general">General</string>
+	<string name="queue_columns">Queue Columns</string>
 </resources>

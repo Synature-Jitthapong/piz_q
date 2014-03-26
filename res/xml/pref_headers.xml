@@ -6,6 +6,9 @@
         android:fragment="com.syn.queuedisplay.custom.SettingActivity$ConnectionFragment"
         android:title="@string/connection"/>
     <header
+        android:fragment="com.syn.queuedisplay.custom.SettingActivity$GeneralFragment"
+        android:title="@string/general"/>
+    <header
         android:fragment="com.syn.queuedisplay.custom.SettingActivity$ResourceFragment"
         android:title="@string/resource"/>
 

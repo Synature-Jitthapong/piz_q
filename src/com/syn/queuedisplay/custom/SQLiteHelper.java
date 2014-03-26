@@ -6,7 +6,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public abstract class SQLiteHelper extends SQLiteOpenHelper{
 	public static final String[] SQL_TABLE_CREATE ={
-		QueueSQL.CREATE_CALLING_QUEUE_TABLE
+		QueueSQL.CALLING_QUEUE_SQL,
+		QueueSQL.QUEUE_COLUMNS_SQL
 	};
 	
 	public SQLiteHelper(Context c) {
