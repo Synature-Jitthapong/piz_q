@@ -25,6 +25,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
+        android:layout_marginRight="8dp"
         android:minHeight="48dp" >
 
         <ImageView
@@ -45,16 +46,6 @@
             android:text="DigitalClock"
             android:textSize="32sp"
             android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/tvVersion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/imgLogo"
-            android:gravity="center_vertical"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@android:color/holo_orange_dark" />
     </RelativeLayout>
 
     <LinearLayout
@@ -79,7 +70,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true" />
+                android:layout_below="@+id/tvVersion" />
 
             <TextView
                 android:id="@+id/textViewPlaying"
@@ -87,6 +78,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/surfaceView1"
                 android:layout_centerHorizontal="true"
+                android:layout_marginBottom="8dp"
                 android:ellipsize="marquee"
                 android:lines="1"
                 android:marqueeRepeatLimit="marquee_forever"
@@ -123,6 +115,17 @@
                 android:onClick="videoNextClicked"
                 android:src="@android:drawable/ic_media_next"
                 android:visibility="invisible" />
+
+            <TextView
+                android:id="@+id/tvVersion"
+                style="@style/ColumnHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:gravity="center_vertical"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
         </RelativeLayout>
 
         <LinearLayout
@@ -135,6 +138,7 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_marginRight="1dp"
                 android:layout_weight="1"
                 android:orientation="vertical" >
 
@@ -160,7 +164,6 @@
                     android:marqueeRepeatLimit="marquee_forever"
                     android:scrollHorizontally="true"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textColor="@android:color/holo_orange_dark"
                     android:textSize="48sp"
                     android:textStyle="bold" />
 
@@ -188,6 +191,7 @@
                     android:layout_weight="1"
                     android:divider="@null"
                     android:dividerHeight="1dp" >
+
                 </ListView>
 
                 <TextView
@@ -205,6 +209,7 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_marginRight="1dp"
                 android:layout_weight="1"
                 android:orientation="vertical" >
 
@@ -229,7 +234,6 @@
                     android:lines="1"
                     android:marqueeRepeatLimit="marquee_forever"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textColor="@android:color/holo_orange_dark"
                     android:textSize="48sp"
                     android:textStyle="bold" />
 
@@ -264,7 +268,6 @@
                     style="@style/ColumnHeader"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="1dp"
                     android:gravity="center"
                     android:minWidth="48dp"
                     android:text="0"
@@ -275,6 +278,7 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_marginRight="1dp"
                 android:layout_weight="1"
                 android:orientation="vertical" >
 
@@ -300,7 +304,6 @@
                     android:marqueeRepeatLimit="marquee_forever"
                     android:scrollHorizontally="true"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textColor="@android:color/holo_orange_dark"
                     android:textSize="48sp"
                     android:textStyle="bold" />
 
@@ -335,7 +338,6 @@
                     style="@style/ColumnHeader"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="1dp"
                     android:gravity="center"
                     android:minWidth="48dp"
                     android:text="0"
@@ -366,14 +368,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="0dp"
-                    android:layout_marginRight="0dp"
                     android:ellipsize="marquee"
                     android:gravity="center"
                     android:lines="1"
                     android:marqueeRepeatLimit="marquee_forever"
                     android:scrollHorizontally="true"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textColor="@android:color/holo_orange_dark"
                     android:textSize="48sp"
                     android:textStyle="bold" />
 
@@ -409,7 +409,6 @@
                     style="@style/ColumnHeader"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="1dp"
                     android:gravity="center"
                     android:minWidth="48dp"
                     android:text="0"
@@ -425,7 +424,6 @@
         android:layout_height="32dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:background="@color/main_background" />
+        android:layout_alignParentRight="true"/>
 
 </RelativeLayout>

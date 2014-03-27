@@ -14,14 +14,12 @@
     <style name="QueueActivityTheme" parent="AppBaseTheme">
         <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
         <item name="android:windowActionBarOverlay">true</item>
-        <item name="android:windowBackground">@color/main_background</item>
     </style>
     <style name="FullscreenActionBarStyle" parent="android:Widget.Holo.ActionBar">
         <item name="android:background">@android:color/transparent</item>
     </style>
     <style name="ColumnHeader" parent="android:Widget.TextView">
         <item name="android:background">@color/header</item>
-        <item name="android:layout_marginRight">1dp</item>
         <item name="android:layout_marginBottom">1dp</item>
        	<item name="android:paddingLeft">4dp</item>
        	<item name="android:paddingTop">4dp</item>
@@ -33,7 +31,8 @@
         <item name="android:background">@color/detail</item>
     </style>
     <style name="SubHead" parent="ColumnHeader">
-        <item name="android:background">@color/sub_header</item>
+        <item name="android:textColor">@android:color/holo_blue_light</item>
+       <item name="android:background">@color/sub_header</item>
     </style>
     
     <!--

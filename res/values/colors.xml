@@ -1,6 +1,5 @@
 <resources>
-<color name="main_background">#FF2C3540</color>
-<color name="header">#33192026</color>
-<color name="sub_header">#3300BF90</color>
-<color name="detail">#332C58A1</color>
+<color name="header">#44294961</color>
+<color name="sub_header">#222F4056</color>
+<color name="detail">#332E425C</color>
 </resources>
