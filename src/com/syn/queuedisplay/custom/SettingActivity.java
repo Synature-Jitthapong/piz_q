@@ -126,10 +126,6 @@ public class SettingActivity extends PreferenceActivity{
 			addPreferencesFromResource(R.xml.pref_general);
 			bindPreferenceSummaryToValue(findPreference(PREF_QUEUE_COLUMNS));
 		}
-		
-		public static void insertQueueColumn(){
-			
-		}
 	}
 	
 	public static class ResourceFragment extends PreferenceFragment{

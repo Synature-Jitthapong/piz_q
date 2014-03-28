@@ -40,7 +40,7 @@ public class QueueDatabase{
 						QueueEntry.COLUMN_CALLING_QUEUE_NAME,
 						QueueEntry.COLUMN_CALLING_QUEUE_TIMES
 				}, QueueEntry.COLUMN_CALLING_QUEUE_TIMES + "<?", 
-				new String[]{String.valueOf(callingTime)}, null, null, null);
+				new String[]{String.valueOf(callingTime)}, null, null, QueueEntry.COLUMN_CALLING_QUEUE_NAME);
 		if(cursor.moveToFirst()){
 			do{
 				CallingQueueData data = new CallingQueueData();

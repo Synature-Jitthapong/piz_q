@@ -8,7 +8,6 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
 
 public class SpeakCallingQueue implements OnCompletionListener, OnPreparedListener{
-	private String mSoundPath;
 	private MediaManager mMediaManager;
 	private MediaPlayer mMediaPlayer;
 	private OnPlaySoundListener mOnPlaySoundListener;
@@ -21,14 +20,15 @@ public class SpeakCallingQueue implements OnCompletionListener, OnPreparedListen
 	}
 	
 	public void speak(String queueText){
-		getCallingSoundPath(queueText);
-		playSound();
+		String soundPath = getCallingSoundPath(queueText);
+		if(soundPath != null)
+			playSound(soundPath);
 	}
 	
-	private void playSound(){
+	private void playSound(String soundPath){
 		try {
 			mMediaPlayer.reset();
-			mMediaPlayer.setDataSource(mSoundPath);
+			mMediaPlayer.setDataSource(soundPath);
 			mMediaPlayer.prepare();
 			mMediaPlayer.setOnPreparedListener(this);
 			mMediaPlayer.setOnCompletionListener(this);
@@ -52,17 +52,21 @@ public class SpeakCallingQueue implements OnCompletionListener, OnPreparedListen
 		return sdCard.listFiles(new MediaManager.MP3ExtensionFilter());
 	}
 	
-	private void getCallingSoundPath(String queueText){
+	private String getCallingSoundPath(String queueText){
 		File[] files = listFiles();
+		if(files == null)
+			return null;
+		
 		if(files.length > 0){
 			for(int i = 0; i < files.length; i++){
 				File f = files[i];
 				String fileName = f.getName().replaceFirst("[.][^.]+$", "");
 				if(fileName.equalsIgnoreCase(queueText)){
-					mSoundPath = f.getPath();
+					return f.getPath();
 				}
 			}
 		}
+		return null;
 	}
 	
 	private void startPlayback(){

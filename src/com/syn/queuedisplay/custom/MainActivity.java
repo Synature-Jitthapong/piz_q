@@ -2,7 +2,6 @@ package com.syn.queuedisplay.custom;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.Gson;
@@ -14,6 +13,7 @@ import com.syn.queuedisplay.util.SystemUiHider;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,7 +25,6 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.TextView;
 
 /**
@@ -62,10 +61,16 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 	/**
 	 * The instance of the {@link SystemUiHider} for this activity.
 	 */
-	private static final int SPEAK_DELAY = 5000;
+	private static final int SPEAK_DELAY = 2500;
 	
+	/**
+	 * index of playing sound
+	 */
 	private int mQueueIdx = -1;
+	
 	private boolean mIsPause = false;
+	
+	private Fragment mQueueFragment;
 	private QueueDatabase mQueueDatabase;
 	private SystemUiHider mSystemUiHider;
 	private Handler mHandlerQueue;
@@ -77,18 +82,6 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 	private SpeakCallingQueue mSpeakCallingQueue;
 	private SurfaceView mSurface;
 	private WebView mWebView;
-	private ListView mLvQueueA;
-	private ListView mLvQueueB;
-	private ListView mLvQueueC;
-	private TextView mTvCallA;
-	private TextView mTvCallB;
-	private TextView mTvCallC;
-	private TextView mTvCallASub;
-	private TextView mTvCallBSub;
-	private TextView mTvCallCSub;
-	private TextView mTvSumQA;
-	private TextView mTvSumQB;
-	private TextView mTvSumQC;
 	private TextView mTvPlaying;
 	private TextView mTvVersion;
 	
@@ -98,18 +91,6 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 		setContentView(R.layout.activity_main);
 		mSurface = (SurfaceView) findViewById(R.id.surfaceView1);
 		mWebView = (WebView) findViewById(R.id.webView1);
-		mLvQueueA = (ListView) findViewById(R.id.lvQueueA);
-		mLvQueueB = (ListView) findViewById(R.id.lvQueueB);
-		mLvQueueC = (ListView) findViewById(R.id.lvQueueC);
-		mTvCallA = (TextView) findViewById(R.id.tvCallA);
-		mTvCallB = (TextView) findViewById(R.id.tvCallB);
-		mTvCallC = (TextView) findViewById(R.id.tvCallC);
-		mTvCallASub = (TextView) findViewById(R.id.tvCallASub);
-		mTvCallBSub = (TextView) findViewById(R.id.tvCallBSub);
-		mTvCallCSub = (TextView) findViewById(R.id.tvCallCSub);
-		mTvSumQB = (TextView) findViewById(R.id.tvSumQB);
-		mTvSumQA = (TextView) findViewById(R.id.tvSumQA);
-		mTvSumQC = (TextView) findViewById(R.id.tvSumQC);
 		mTvPlaying = (TextView) findViewById(R.id.textViewPlaying);
 		mTvVersion = (TextView) findViewById(R.id.tvVersion);
 		
@@ -171,9 +152,18 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 		// init media player
 		mVideoPlayer = new VideoPlayer(QueueApplication.sContext, mSurface, 
 				QueueApplication.getVDODir(), this);
+		setupQueueColumn();
 		createMarqueeText();
 	}
 
+	private void setupQueueColumn(){
+		if(QueueApplication.getColumns().equals("3"))
+			mQueueFragment = Queue3ColumnFragment.newInstance();
+		else if(QueueApplication.getColumns().equals("4"))
+			mQueueFragment = Queue4ColumnFragment.newInstance();
+		getFragmentManager().beginTransaction().add(R.id.queueContainer, mQueueFragment).commit();
+	}
+	
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
@@ -252,6 +242,9 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 		mHideHandler.postDelayed(mHideRunnable, delayMillis);
 	}
 	
+	/**
+	 * Play calling sound
+	 */
 	private Runnable mSpeakQueueRunnable = new Runnable(){
 
 		@Override
@@ -283,9 +276,17 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 				
 				@Override
 				public void onPost(QueueDisplayInfo queueInfo) {
-					filterQueueGroup(queueInfo);
+					updateQueueData(queueInfo);
 				}
 	};
+	
+	private void updateQueueData(QueueDisplayInfo queueInfo){
+		if(mQueueFragment instanceof Queue3ColumnFragment){
+			((Queue3ColumnFragment) mQueueFragment).setQueueData(queueInfo);
+		}else if(mQueueFragment instanceof Queue4ColumnFragment){
+			((Queue4ColumnFragment) mQueueFragment).setQueueData(queueInfo);
+		}
+	}
 	
 	private Runnable mUpdateQueue = new Runnable() {
 
@@ -302,75 +303,21 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 		}
 
 	};
-	
-	private void filterQueueGroup(QueueDisplayInfo queueDisplayInfo){
-		int totalQueueA = 0;
-		int totalQueueB = 0;
-		int totalQueueC = 0;
-		List<QueueDisplayInfo.QueueInfo> queueALst = new ArrayList<QueueDisplayInfo.QueueInfo>();
-		List<QueueDisplayInfo.QueueInfo> queueBLst = new ArrayList<QueueDisplayInfo.QueueInfo>();
-		List<QueueDisplayInfo.QueueInfo> queueCLst = new ArrayList<QueueDisplayInfo.QueueInfo>();
-		for(QueueDisplayInfo.QueueInfo queueInfo : queueDisplayInfo.xListQueueInfo){
-			if(queueInfo.getiQueueGroupID() == 1){
-				queueALst.add(queueInfo);
-				totalQueueA++;
-			}
-			
-			if(queueInfo.getiQueueGroupID() == 2){
-				queueBLst.add(queueInfo);
-				totalQueueB++;
-			}
-			
-			if(queueInfo.getiQueueGroupID() == 3){
-				queueCLst.add(queueInfo);
-				totalQueueC++;
-			}
-		}
-		
-		if(!queueDisplayInfo.getSzCurQueueGroupA().equals("")){
-			mTvCallA.setText(queueDisplayInfo.getSzCurQueueGroupA());
-			mTvCallASub.setText(queueDisplayInfo.getSzCurQueueCustomerA());
-			mQueueDatabase.addCallingQueue(queueDisplayInfo.getSzCurQueueGroupA());
-		}else{
-			mTvCallA.setText("");
-			mTvCallASub.setText("");
-		}
-		
-		if(!queueDisplayInfo.getSzCurQueueGroupB().equals("")){
-			mTvCallB.setText(queueDisplayInfo.getSzCurQueueGroupB());
-			mTvCallBSub.setText(queueDisplayInfo.getSzCurQueueCustomerB());
-			mQueueDatabase.addCallingQueue(queueDisplayInfo.getSzCurQueueGroupB());
-		}else{
-			mTvCallB.setText("");
-			mTvCallBSub.setText("");
-		}
-		
-		if(!queueDisplayInfo.getSzCurQueueGroupC().equals("")){
-			mTvCallC.setText(queueDisplayInfo.getSzCurQueueGroupC());
-			mTvCallCSub.setText(queueDisplayInfo.getSzCurQueueCustomerC());
-			mQueueDatabase.addCallingQueue(queueDisplayInfo.getSzCurQueueGroupC());
-		}else{
-			mTvCallC.setText("");
-			mTvCallCSub.setText("");
-		}
-		mLvQueueA.setAdapter(new TableQueueAdapter(QueueApplication.sContext, queueALst));
-		mLvQueueB.setAdapter(new TableQueueAdapter(QueueApplication.sContext, queueBLst));
-		mLvQueueC.setAdapter(new TableQueueAdapter(QueueApplication.sContext, queueCLst));
-		mTvSumQA.setText(String.valueOf(totalQueueA));
-		mTvSumQB.setText(String.valueOf(totalQueueB));
-		mTvSumQC.setText(String.valueOf(totalQueueC));
-	}
 
-	@Override
-	protected void onDestroy() {
+	private void release(){
 		try {
-			//mHandlerQueue.removeCallbacks(mUpdateQueue);
+			mHandlerQueue.removeCallbacks(mUpdateQueue);
 			mHandlerSpeakQueue.removeCallbacks(mSpeakQueueRunnable);
 			mVideoPlayer.releaseMediaPlayer();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}	
+	}
+
+	@Override
+	protected void onDestroy() {
+		release();
 		super.onDestroy();
 	}
 
@@ -406,7 +353,7 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 
 				@Override
 				public void run() {
-					filterQueueGroup(queueDisplayInfo);	
+					updateQueueData(queueDisplayInfo);
 				}
 				
 			});
@@ -453,7 +400,7 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 
 	@Override
 	public void run() {
-		while(true){
+		while(!mLoadCallingQueueThread.isInterrupted()){
 			if(mQueueIdx == -1){
 				mCallingQueueLst = mQueueDatabase.listCallingQueueName(
 						Integer.parseInt(QueueApplication.getSpeakTimes()));

@@ -22,11 +22,11 @@ public class QueueServerSocket implements Runnable{
 		Socket socket = null;
 		while(!Thread.currentThread().isInterrupted()){
 			try {
-				if(socket == null)
-					socket = mSocket.accept();
+				socket = mSocket.accept();
 				BufferedReader bf = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-				if(bf != null)
-					mListener.onReceipt(bf.readLine());
+				String msg = bf.readLine();
+				if(msg != null)
+					mListener.onReceipt(msg);
 			} catch (IOException e) {
 				mListener.onAcceptErr(e.getMessage());
 			}

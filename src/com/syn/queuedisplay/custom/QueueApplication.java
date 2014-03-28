@@ -58,6 +58,12 @@ public class QueueApplication extends Application{
 		return sSQLiteHelper.getWritableDatabase();
 	}
 	
+	public static String getColumns(){
+		SharedPreferences sharedPref = PreferenceManager
+				.getDefaultSharedPreferences(sContext);
+		return sharedPref.getString(SettingActivity.PREF_QUEUE_COLUMNS, "3");
+	}
+	
 	public static String getSpeakTimes(){
 		SharedPreferences sharedPref = PreferenceManager
 				.getDefaultSharedPreferences(sContext);
