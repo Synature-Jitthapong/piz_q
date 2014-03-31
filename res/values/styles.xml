@@ -39,7 +39,7 @@
     <style name="AppTheme" parent="AppBaseTheme">
         <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
         <item name="android:windowActionBarOverlay">true</item>
-        <item name="android:windowBackground">@drawable/gradient_bg_widget_holo</item>
+        <item name="android:windowBackground">@color/grey_blue_light</item>
     </style>
     <!--
         Base application theme, dependent on API level. This theme is replaced
