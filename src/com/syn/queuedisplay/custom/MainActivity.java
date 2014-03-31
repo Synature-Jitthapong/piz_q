@@ -252,8 +252,13 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 			if(mCallingQueueLst.size() > 0){
 				CallingQueueData q = mCallingQueueLst.get(mQueueIdx);
 				int callingTime = q.getCallingTime();
-				mSpeakCallingQueue.speak(q.getQueueName());
-				mQueueDatabase.updateCallingQueue(q.getQueueName(), ++callingTime);
+				try {
+					mSpeakCallingQueue.speak(q.getQueueName());
+					mQueueDatabase.updateCallingQueue(q.getQueueName(), ++callingTime);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 		
@@ -368,12 +373,22 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 
 	@Override
 	public void onSpeaking() {
-		mVideoPlayer.setSoundVolumn(0.0f, 0.0f);
+		try {
+			mVideoPlayer.setSoundVolumn(0.0f, 0.0f);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void onSpeakComplete() {
-		mVideoPlayer.setSoundVolumn(1.0f, 1.0f);
+		try {
+			mVideoPlayer.setSoundVolumn(1.0f, 1.0f);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		if(mQueueIdx < mCallingQueueLst.size() - 1){
 			mHandlerSpeakQueue.postDelayed(mSpeakQueueRunnable, SPEAK_DELAY);
 			mQueueIdx++;

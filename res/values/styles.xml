@@ -7,38 +7,45 @@
         <item name="android:windowActionModeOverlay">true</item>
     	<item name="android:windowIsTranslucent">true</item>
     </style>
-    <!-- Application theme. -->
-    <style name="SettingActivityTheme" parent="android:Theme.Holo.Light">
-        
-    </style>
-    <style name="QueueActivityTheme" parent="AppBaseTheme">
-        <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
-        <item name="android:windowActionBarOverlay">true</item>
-    </style>
     <style name="FullscreenActionBarStyle" parent="android:Widget.Holo.ActionBar">
         <item name="android:background">@android:color/transparent</item>
     </style>
     <style name="ColumnHeader" parent="android:Widget.TextView">
-        <item name="android:background">@color/header</item>
+        <item name="android:background">@drawable/header_background</item>
         <item name="android:layout_marginBottom">1dp</item>
        	<item name="android:paddingLeft">4dp</item>
        	<item name="android:paddingTop">4dp</item>
        	<item name="android:paddingRight">4dp</item>
        	<item name="android:paddingBottom">0dp</item>
+       	<item name="android:gravity">center</item>
     </style>
-    <style name="ColumnDetail" parent="ColumnHeader">
-        <item name="android:background">@color/detail</item>
+    <style name="Calling" parent="ColumnHeader">
+       <item name="android:background">@android:color/transparent</item>
+       <item name="android:textColor">@android:color/holo_blue_light</item>
     </style>
-    <style name="SubHead" parent="ColumnHeader">
-        <item name="android:textColor">@android:color/holo_blue_light</item>
-       <item name="android:background">@color/sub_header</item>
+    <style name="CallingCustName" parent="Calling">
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:textSize">16sp</item>
     </style>
-    
+    <style name="Detail" parent="ColumnHeader">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:textSize">32sp</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+    <style name="DetailCustName" parent="Detail">
+        <item name="android:textSize">16sp</item>
+    </style>
+    <style name="AppTheme" parent="AppBaseTheme">
+        <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowBackground">@drawable/gradient_bg_widget_holo</item>
+    </style>
     <!--
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
-    <style name="AppBaseTheme" parent="android:Theme.Holo">
+    <style name="AppBaseTheme" parent="android:Theme.Holo.Light">
         <!--
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to

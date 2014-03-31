@@ -17,42 +17,50 @@
             style="@style/ColumnHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/grey_dark_background"
             android:gravity="center"
             android:text="@string/a"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/tvCallA"
-            style="@style/SubHead"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="0dp"
-            android:ellipsize="marquee"
-            android:gravity="center"
-            android:lines="1"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:scrollHorizontally="true"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="48sp"
-            android:textStyle="bold" />
+            android:layout_marginBottom="4dp"
+            android:background="@drawable/queue_item_background"
+            android:orientation="vertical" >
 
-        <TextView
-            android:id="@+id/tvCallASub"
-            style="@style/SubHead"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="marquee"
-            android:fadingEdge="horizontal"
-            android:gravity="center"
-            android:lines="1"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:paddingBottom="4dp"
-            android:paddingTop="0dp"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="14sp" />
+            <TextView
+                android:id="@+id/tvCallA"
+                style="@style/Calling"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="0dp"
+                android:ellipsize="marquee"
+                android:gravity="center"
+                android:lines="1"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:paddingTop="0dp"
+                android:scrollHorizontally="true"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="48sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvCallASub"
+                style="@style/CallingCustName"
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:gravity="center"
+                android:lines="1"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        </LinearLayout>
 
         <ListView
             android:id="@+id/lvQueueA"
@@ -61,6 +69,7 @@
             android:layout_weight="1"
             android:divider="@null"
             android:dividerHeight="1dp" >
+
         </ListView>
 
         <TextView
@@ -87,41 +96,48 @@
             style="@style/ColumnHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/grey_dark_background"
             android:gravity="center"
             android:text="@string/b"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/tvCallB"
-            style="@style/SubHead"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="0dp"
-            android:ellipsize="marquee"
-            android:gravity="center"
-            android:lines="1"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="48sp"
-            android:textStyle="bold" />
+            android:layout_marginBottom="4dp"
+            android:background="@drawable/queue_item_background"
+            android:orientation="vertical" >
 
-        <TextView
-            android:id="@+id/tvCallBSub"
-            style="@style/SubHead"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="marquee"
-            android:fadingEdge="horizontal"
-            android:gravity="center"
-            android:lines="1"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:paddingBottom="4dp"
-            android:paddingTop="0dp"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="14sp" />
+            <TextView
+                android:id="@+id/tvCallB"
+                style="@style/Calling"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="0dp"
+                android:ellipsize="marquee"
+                android:gravity="center"
+                android:lines="1"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:paddingTop="0dp"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="48sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvCallBSub"
+                style="@style/CallingCustName"
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:gravity="center"
+                android:lines="1"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </LinearLayout>
 
         <ListView
             android:id="@+id/lvQueueB"
@@ -130,6 +146,7 @@
             android:layout_weight="1"
             android:divider="@null"
             android:dividerHeight="1dp" >
+
         </ListView>
 
         <TextView
@@ -156,42 +173,49 @@
             style="@style/ColumnHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/grey_dark_background"
             android:gravity="center"
             android:text="@string/c"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/tvCallC"
-            style="@style/SubHead"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="0dp"
-            android:ellipsize="marquee"
-            android:gravity="center"
-            android:lines="1"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:scrollHorizontally="true"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="48sp"
-            android:textStyle="bold" />
+            android:layout_marginBottom="4dp"
+            android:background="@drawable/queue_item_background"
+            android:orientation="vertical" >
 
-        <TextView
-            android:id="@+id/tvCallCSub"
-            style="@style/SubHead"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="marquee"
-            android:fadingEdge="horizontal"
-            android:gravity="center"
-            android:lines="1"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:paddingBottom="4dp"
-            android:paddingTop="0dp"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="14sp" />
+            <TextView
+                android:id="@+id/tvCallC"
+                style="@style/Calling"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="0dp"
+                android:ellipsize="marquee"
+                android:gravity="center"
+                android:lines="1"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:paddingTop="0dp"
+                android:scrollHorizontally="true"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="48sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvCallCSub"
+                style="@style/CallingCustName"
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:gravity="center"
+                android:lines="1"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </LinearLayout>
 
         <ListView
             android:id="@+id/lvQueueC"
@@ -200,6 +224,7 @@
             android:layout_weight="1"
             android:divider="@null"
             android:dividerHeight="1dp" >
+
         </ListView>
 
         <TextView
@@ -226,43 +251,50 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="0dp"
+            android:background="@drawable/grey_dark_background"
             android:gravity="center"
             android:text="@string/d"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/tvCallD"
-            style="@style/SubHead"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="0dp"
-            android:ellipsize="marquee"
-            android:gravity="center"
-            android:lines="1"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:scrollHorizontally="true"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="48sp"
-            android:textStyle="bold" />
+            android:layout_marginBottom="4dp"
+            android:background="@drawable/queue_item_background"
+            android:orientation="vertical" >
 
-        <TextView
-            android:id="@+id/tvCallDSub"
-            style="@style/SubHead"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="0dp"
-            android:ellipsize="marquee"
-            android:fadingEdge="horizontal"
-            android:gravity="center"
-            android:lines="1"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:paddingBottom="4dp"
-            android:paddingTop="0dp"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="14sp" />
+            <TextView
+                android:id="@+id/tvCallD"
+                style="@style/Calling"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="0dp"
+                android:ellipsize="marquee"
+                android:gravity="center"
+                android:lines="1"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:paddingTop="0dp"
+                android:scrollHorizontally="true"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="48sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvCallDSub"
+                style="@style/CallingCustName"
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:layout_marginRight="0dp"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:gravity="center"
+                android:lines="1"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </LinearLayout>
 
         <ListView
             android:id="@+id/lvQueueD"
@@ -271,6 +303,7 @@
             android:layout_weight="1"
             android:divider="@null"
             android:dividerHeight="1dp" >
+
         </ListView>
 
         <TextView

@@ -7,6 +7,7 @@ import com.syn.pos.QueueDisplayInfo;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ public class Queue3ColumnFragment extends Fragment{
 	protected List<QueueDisplayInfo.QueueInfo> mQueueBLst;
 	protected List<QueueDisplayInfo.QueueInfo> mQueueCLst;
 	
+	protected Handler mNotifyCalling;
 	protected ListView mLvQueueA;
 	protected ListView mLvQueueB;
 	protected ListView mLvQueueC;
@@ -40,6 +42,7 @@ public class Queue3ColumnFragment extends Fragment{
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		mNotifyCalling = new Handler();
 		mQueueDatabase = new QueueDatabase(QueueApplication.getWritableDatabase());
 		mQueueALst = new ArrayList<QueueDisplayInfo.QueueInfo>();
 		mQueueBLst = new ArrayList<QueueDisplayInfo.QueueInfo>();
@@ -67,6 +70,29 @@ public class Queue3ColumnFragment extends Fragment{
 		return v;
 	}
 
+	private Runnable mRunnableNotifyCalling = new Runnable(){
+
+		@Override
+		public void run() {
+			if(mTvCallA.getVisibility() == View.VISIBLE)
+				mTvCallA.setVisibility(View.INVISIBLE);
+			else
+				mTvCallA.setVisibility(View.VISIBLE);
+			
+			if(mTvCallB.getVisibility() == View.VISIBLE)
+				mTvCallB.setVisibility(View.INVISIBLE);
+			else
+				mTvCallB.setVisibility(View.VISIBLE);
+			
+			if(mTvCallC.getVisibility() == View.VISIBLE)
+				mTvCallC.setVisibility(View.INVISIBLE);
+			else
+				mTvCallC.setVisibility(View.VISIBLE);
+
+			mNotifyCalling.postDelayed(this, 1000);
+		}
+	};
+	
 	public void setQueueData(QueueDisplayInfo queueDisplayInfo){
 		int totalQueueA = 0;
 		int totalQueueB = 0;
@@ -124,5 +150,8 @@ public class Queue3ColumnFragment extends Fragment{
 		mTvSumQA.setText(String.valueOf(totalQueueA));
 		mTvSumQB.setText(String.valueOf(totalQueueB));
 		mTvSumQC.setText(String.valueOf(totalQueueC));
+		
+		mNotifyCalling.removeCallbacks(mRunnableNotifyCalling);
+		mNotifyCalling.post(mRunnableNotifyCalling);
 	}
 }

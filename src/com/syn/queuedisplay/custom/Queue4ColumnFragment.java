@@ -2,7 +2,9 @@ package com.syn.queuedisplay.custom;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import com.syn.pos.QueueDisplayInfo;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,7 +55,34 @@ public class Queue4ColumnFragment extends Queue3ColumnFragment{
 		
 		return v;
 	}
+	
+	private Runnable mRunnableNotifyCalling = new Runnable(){
 
+		@Override
+		public void run() {
+			if(mTvCallA.getVisibility() == View.VISIBLE)
+				mTvCallA.setVisibility(View.INVISIBLE);
+			else
+				mTvCallA.setVisibility(View.VISIBLE);
+			
+			if(mTvCallB.getVisibility() == View.VISIBLE)
+				mTvCallB.setVisibility(View.INVISIBLE);
+			else
+				mTvCallB.setVisibility(View.VISIBLE);
+			
+			if(mTvCallC.getVisibility() == View.VISIBLE)
+				mTvCallC.setVisibility(View.INVISIBLE);
+			else
+				mTvCallC.setVisibility(View.VISIBLE);
+
+			if(mTvCallD.getVisibility() == View.VISIBLE)
+				mTvCallD.setVisibility(View.INVISIBLE);
+			else
+				mTvCallD.setVisibility(View.VISIBLE);
+			mNotifyCalling.postDelayed(this, 1000);
+		}
+	};
+	
 	public void setQueueData(QueueDisplayInfo queueDisplayInfo){
 		int totalQueueA = 0;
 		int totalQueueB = 0;
@@ -112,6 +141,15 @@ public class Queue4ColumnFragment extends Queue3ColumnFragment{
 			mTvCallCSub.setText("");
 		}
 		
+		if(!queueDisplayInfo.getSzCurQueueGroupD().equals("")){
+			mTvCallD.setText(queueDisplayInfo.getSzCurQueueGroupD());
+			mTvCallDSub.setText(queueDisplayInfo.getSzCurQueueCustomerD());
+			mQueueDatabase.addCallingQueue(queueDisplayInfo.getSzCurQueueGroupD());
+		}else{
+			mTvCallD.setText("");
+			mTvCallDSub.setText("");
+		}
+		
 		mLvQueueA.setAdapter(new TableQueueAdapter(QueueApplication.sContext, mQueueALst));
 		mLvQueueB.setAdapter(new TableQueueAdapter(QueueApplication.sContext, mQueueBLst));
 		mLvQueueC.setAdapter(new TableQueueAdapter(QueueApplication.sContext, mQueueCLst));
@@ -120,5 +158,8 @@ public class Queue4ColumnFragment extends Queue3ColumnFragment{
 		mTvSumQB.setText(String.valueOf(totalQueueB));
 		mTvSumQC.setText(String.valueOf(totalQueueC));
 		mTvSumQD.setText(String.valueOf(totalQueueD));
+		
+		mNotifyCalling.removeCallbacks(mRunnableNotifyCalling);
+		mNotifyCalling.post(mRunnableNotifyCalling);
 	}
 }

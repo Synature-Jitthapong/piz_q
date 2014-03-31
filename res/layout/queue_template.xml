@@ -2,12 +2,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/queue_item_background"
     android:gravity="center_vertical"
     android:orientation="vertical" >
 
     <TextView
         android:id="@+id/tvQueueName"
-        style="@style/ColumnDetail"
+        style="@style/Detail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -21,7 +22,7 @@
 
     <TextView
         android:id="@+id/tvQueueSummary"
-        style="@style/ColumnDetail"
+        style="@style/DetailCustName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -37,7 +38,6 @@
         android:scrollHorizontally="true"
         android:singleLine="true"
         android:text="Customer Name"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textSize="14sp" />
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </RelativeLayout>

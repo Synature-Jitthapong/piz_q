@@ -7,7 +7,6 @@
 
     <TextView
         android:id="@+id/textViewTakeNo"
-        style="@style/ColumnDetail"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="1dp"
@@ -25,7 +24,6 @@
 
     <TextView
         android:id="@+id/textViewTakeName"
-        style="@style/ColumnDetail"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="1dp"
@@ -43,7 +41,6 @@
 
     <TextView
         android:id="@+id/textViewWaitingTime"
-        style="@style/ColumnDetail"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="1dp"
@@ -62,7 +59,6 @@
 
     <TextView
         android:id="@+id/textViewTakeStatus"
-        style="@style/ColumnDetail"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="1dp"
