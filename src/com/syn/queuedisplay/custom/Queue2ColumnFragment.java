@@ -3,7 +3,6 @@ package com.syn.queuedisplay.custom;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.syn.pos.QueueDisplayInfo;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,41 +10,39 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class Queue3ColumnFragment extends Queue2ColumnFragment{
+import com.syn.pos.QueueDisplayInfo;
 
-	protected List<QueueDisplayInfo.QueueInfo> mQueueCLst;
-	protected ListView mLvQueueC;
-	protected TextView mTvCallC;
-	protected TextView mTvCallCSub;
-	protected TextView mTvSumQC;
+public class Queue2ColumnFragment extends QueueColumnFragment{
 	
-	public static Queue3ColumnFragment newInstance(){
-		Queue3ColumnFragment f = new Queue3ColumnFragment();
+	protected List<QueueDisplayInfo.QueueInfo> mQueueBLst;
+	protected ListView mLvQueueB;
+	protected TextView mTvCallB;
+	protected TextView mTvCallBSub;
+	protected TextView mTvSumQB;
+	
+	public static Queue2ColumnFragment newInstance(){
+		Queue2ColumnFragment f = new Queue2ColumnFragment();
 		return f;
 	}
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mQueueCLst = new ArrayList<QueueDisplayInfo.QueueInfo>();
+		mQueueBLst = new ArrayList<QueueDisplayInfo.QueueInfo>();
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View v = inflater.inflate(R.layout.queue3columns_fragment, container, false);
+		View v = inflater.inflate(R.layout.queue2columns_fragment, container, false);
 		mLvQueueA = (ListView) v.findViewById(R.id.lvQueueA);
 		mLvQueueB = (ListView) v.findViewById(R.id.lvQueueB);
-		mLvQueueC = (ListView) v.findViewById(R.id.lvQueueC);
 		mTvCallA = (TextView) v.findViewById(R.id.tvCallA);
 		mTvCallB = (TextView) v.findViewById(R.id.tvCallB);
-		mTvCallC = (TextView) v.findViewById(R.id.tvCallC);
 		mTvCallASub = (TextView) v.findViewById(R.id.tvCallASub);
 		mTvCallBSub = (TextView) v.findViewById(R.id.tvCallBSub);
-		mTvCallCSub = (TextView) v.findViewById(R.id.tvCallCSub);
 		mTvSumQB = (TextView) v.findViewById(R.id.tvSumQB);
 		mTvSumQA = (TextView) v.findViewById(R.id.tvSumQA);
-		mTvSumQC = (TextView) v.findViewById(R.id.tvSumQC);
 		return v;
 	}
 
@@ -62,12 +59,6 @@ public class Queue3ColumnFragment extends Queue2ColumnFragment{
 				mTvCallB.setVisibility(View.INVISIBLE);
 			else
 				mTvCallB.setVisibility(View.VISIBLE);
-			
-			if(mTvCallC.getVisibility() == View.VISIBLE)
-				mTvCallC.setVisibility(View.INVISIBLE);
-			else
-				mTvCallC.setVisibility(View.VISIBLE);
-
 			mNotifyCalling.postDelayed(this, 1000);
 		}
 	};
@@ -75,10 +66,8 @@ public class Queue3ColumnFragment extends Queue2ColumnFragment{
 	public void setQueueData(QueueDisplayInfo queueDisplayInfo){
 		int totalQueueA = 0;
 		int totalQueueB = 0;
-		int totalQueueC = 0;
 		mQueueALst.clear();
 		mQueueBLst.clear();
-		mQueueCLst.clear();
 		for(QueueDisplayInfo.QueueInfo queueInfo : queueDisplayInfo.xListQueueInfo){
 			if(queueInfo.getiQueueGroupID() == 1){
 				mQueueALst.add(queueInfo);
@@ -88,11 +77,6 @@ public class Queue3ColumnFragment extends Queue2ColumnFragment{
 			if(queueInfo.getiQueueGroupID() == 2){
 				mQueueBLst.add(queueInfo);
 				totalQueueB++;
-			}
-			
-			if(queueInfo.getiQueueGroupID() == 3){
-				mQueueCLst.add(queueInfo);
-				totalQueueC++;
 			}
 		}
 		
@@ -114,22 +98,10 @@ public class Queue3ColumnFragment extends Queue2ColumnFragment{
 			mTvCallBSub.setText("");
 		}
 		
-		if(!queueDisplayInfo.getSzCurQueueGroupC().equals("")){
-			mTvCallC.setText(queueDisplayInfo.getSzCurQueueGroupC());
-			mTvCallCSub.setText(queueDisplayInfo.getSzCurQueueCustomerC());
-			mQueueDatabase.addCallingQueue(queueDisplayInfo.getSzCurQueueGroupC());
-		}else{
-			mTvCallC.setText("");
-			mTvCallCSub.setText("");
-		}
-		
 		mLvQueueA.setAdapter(new TableQueueAdapter(QueueApplication.sContext, mQueueALst));
 		mLvQueueB.setAdapter(new TableQueueAdapter(QueueApplication.sContext, mQueueBLst));
-		mLvQueueC.setAdapter(new TableQueueAdapter(QueueApplication.sContext, mQueueCLst));
 		mTvSumQA.setText(String.valueOf(totalQueueA));
 		mTvSumQB.setText(String.valueOf(totalQueueB));
-		mTvSumQC.setText(String.valueOf(totalQueueC));
-		
 		mNotifyCalling.removeCallbacks(mRunnableNotifyCalling);
 		mNotifyCalling.post(mRunnableNotifyCalling);
 	}

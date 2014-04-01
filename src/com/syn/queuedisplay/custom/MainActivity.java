@@ -157,11 +157,15 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 	}
 
 	private void setupQueueColumn(){
-		if(QueueApplication.getColumns().equals("3"))
+		if(QueueApplication.getColumns().equals("1"))
+			mQueueFragment = QueueColumnFragment.newInstance();
+		else if(QueueApplication.getColumns().equals("2"))
+			mQueueFragment = Queue2ColumnFragment.newInstance();
+		else if(QueueApplication.getColumns().equals("3"))
 			mQueueFragment = Queue3ColumnFragment.newInstance();
 		else if(QueueApplication.getColumns().equals("4"))
 			mQueueFragment = Queue4ColumnFragment.newInstance();
-		getFragmentManager().beginTransaction().add(R.id.queueContainer, mQueueFragment).commit();
+		getFragmentManager().beginTransaction().replace(R.id.queueContainer, mQueueFragment).commit();
 	}
 	
 	@Override
@@ -178,8 +182,8 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 		if (!QueueApplication.getInfoText().equals("")) {
 			mWebView.setVisibility(View.VISIBLE);
 			StringBuilder strHtml = new StringBuilder();
-			strHtml.append("<body style=\"margin:0; padding:0; background:#2C3540; \">");
-			strHtml.append("<marquee direction=\"left\" style=\"color:#f0f0f0; width: auto;\" >");
+			strHtml.append("<body style=\"text-align:center;background:#BEBEBE; \">");
+			strHtml.append("<marquee direction=\"left\" style=\"width: auto;\" >");
 			strHtml.append(QueueApplication.getInfoText());
 			strHtml.append("</marquee>");
 			strHtml.append("</body>");
@@ -286,7 +290,11 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 	};
 	
 	private void updateQueueData(QueueDisplayInfo queueInfo){
-		if(mQueueFragment instanceof Queue3ColumnFragment){
+		if(mQueueFragment instanceof QueueColumnFragment){
+			((QueueColumnFragment) mQueueFragment).setQueueData(queueInfo);
+		}else if(mQueueFragment instanceof Queue2ColumnFragment){
+			((Queue2ColumnFragment) mQueueFragment).setQueueData(queueInfo);
+		}else if(mQueueFragment instanceof Queue3ColumnFragment){
 			((Queue3ColumnFragment) mQueueFragment).setQueueData(queueInfo);
 		}else if(mQueueFragment instanceof Queue4ColumnFragment){
 			((Queue4ColumnFragment) mQueueFragment).setQueueData(queueInfo);
@@ -309,8 +317,34 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 
 	};
 
+	private synchronized void stopConnThread(){
+		if(mConnThread != null)
+		{
+			try {
+				mConnThread.interrupt();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	private synchronized void stopLoadCallingThread(){
+		if(mLoadCallingQueueThread != null)
+		{
+			try {
+				mLoadCallingQueueThread.interrupt();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	private void release(){
 		try {
+			stopLoadCallingThread();
+			stopConnThread();
 			mHandlerQueue.removeCallbacks(mUpdateQueue);
 			mHandlerSpeakQueue.removeCallbacks(mSpeakQueueRunnable);
 			mVideoPlayer.releaseMediaPlayer();

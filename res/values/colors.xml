@@ -1,7 +1,9 @@
 <resources>
 <color name="smoke_white">#FFFCFCFC</color>
 <color name="grey">#FFBEBEBE</color>
+<color name="grey_medium">#FFCDCDCD</color>
 <color name="grey_dark">#FFA9A9A9</color>
 <color name="grey_light">#FFE2E2E2</color>
 <color name="grey_blue_light">#FFE9EAED</color>
+<color name="blue_medium">#FF2190B5</color>
 </resources>

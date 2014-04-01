@@ -52,7 +52,6 @@ public class Queue4ColumnFragment extends Queue3ColumnFragment{
 		mTvSumQA = (TextView) v.findViewById(R.id.tvSumQA);
 		mTvSumQC = (TextView) v.findViewById(R.id.tvSumQC);
 		mTvSumQD = (TextView) v.findViewById(R.id.tvSumQD);
-		
 		return v;
 	}
 	

@@ -25,7 +25,6 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:background="@drawable/header_background"
         android:minHeight="48dp"
         android:paddingRight="8dp" >
 
@@ -62,7 +61,8 @@
             android:layout_marginBottom="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
-            android:layout_weight="1" >
+            android:layout_weight="1"
+            android:background="@drawable/queue_background" >
 
             <SurfaceView
                 android:id="@+id/surfaceView1"

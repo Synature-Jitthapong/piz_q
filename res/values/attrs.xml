@@ -25,12 +25,16 @@
         
     </string-array>
     <string-array name="pref_column_name">
-        <item >3</item>
-        <item >4</item>
+        <item >1 (A)</item><item >2 (A, B)</item><item >3 (A, B, C)</item>
+        <item >4 (A, B, C, D)</item>
+        
+        
     </string-array>
     <string-array name="pref_column_value">
-        <item >3</item>
+        <item >1</item><item >2</item><item >3</item>
         <item >4</item>
+        
+        
     </string-array>
 
 </resources>
