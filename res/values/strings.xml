@@ -39,4 +39,6 @@
     <string name="d">D</string>
     <string name="general">General</string>
 	<string name="queue_columns">Queue Columns</string>
+	<string name="calling_queue_dir">Calling Queue Sound Dir</string>
+	<string name="calling_times">Calling Times</string>
 </resources>

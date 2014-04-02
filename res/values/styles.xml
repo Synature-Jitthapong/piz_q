@@ -19,6 +19,9 @@
        	<item name="android:paddingBottom">0dp</item>
        	<item name="android:gravity">center</item>
     </style>
+    <style name="ColumnSum" parent="ColumnHeader">
+        <item name="android:background">@color/grey_medium</item>
+    </style>
     <style name="Calling" parent="ColumnHeader">
        <item name="android:background">@android:color/transparent</item>
        <item name="android:textColor">@color/smoke_white</item>
