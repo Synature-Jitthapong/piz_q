@@ -7,6 +7,7 @@ import java.util.List;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.j1tth4.mediaplayer.VideoPlayer;
+import com.j1tth4.mobile.util.Logger;
 import com.syn.pos.QueueDisplayInfo;
 import com.syn.queuedisplay.custom.QueueDatabase.CallingQueueData;
 import com.syn.queuedisplay.util.SystemUiHider;
@@ -15,6 +16,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -69,6 +71,10 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 	private int mQueueIdx = -1;
 	
 	private boolean mIsPause = false;
+	
+	private SQLiteHelper mSqliteHelper;
+	
+	private SQLiteDatabase mSqlite;
 	
 	private Fragment mQueueFragment;
 	private QueueDatabase mQueueDatabase;
@@ -136,7 +142,10 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 		// init object
 		mHandlerQueue = new Handler();
 		mHandlerQueue.post(mUpdateQueue);
-		mQueueDatabase = new QueueDatabase(QueueApplication.getWritableDatabase());
+		
+		mSqliteHelper = new SQLiteHelper(this);
+		mSqlite = mSqliteHelper.getWritableDatabase();
+		mQueueDatabase = new QueueDatabase(mSqlite);
 		mQueueDatabase.deleteQueue();
 		mHandlerSpeakQueue = new Handler();
 		mSpeakCallingQueue = new SpeakCallingQueue(this);
@@ -156,6 +165,10 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 		createMarqueeText();
 	}
 
+	public SQLiteDatabase getDatabase(){
+		return mSqlite;
+	}
+	
 	private void setupQueueColumn(){
 		if(QueueApplication.getColumns().equals("1"))
 			mQueueFragment = QueueColumnFragment.newInstance();
@@ -310,7 +323,8 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 						mLoadQueueListener).execute(QueueApplication.getFullUrl());
 				mHandlerQueue.postDelayed(this, Long.parseLong(QueueApplication.getRefresh()));
 			} catch (Exception e) {
-				QueueApplication.sQueueLog.appendLog(e.getMessage());
+				Logger.appendLog(MainActivity.this, QueueApplication.LOG_DIR, 
+						QueueApplication.LOG_FILE_NAME, e.getMessage());
 				e.printStackTrace();
 			}
 		}

@@ -5,13 +5,18 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class SQLiteHelper extends SQLiteOpenHelper{
+
+	public static final String DB_NAME = "queue.db";
+	
+	public static final int DB_VERSION = 1;
+	
 	public static final String[] SQL_TABLE_CREATE ={
 		QueueSQL.CALLING_QUEUE_SQL,
 		QueueSQL.QUEUE_COLUMNS_SQL
 	};
 	
-	public SQLiteHelper(Context c, String dbName, int dbVersion) {
-		super(c, dbName, null, dbVersion);
+	public SQLiteHelper(Context c) {
+		super(c, DB_NAME, null, DB_VERSION);
 	}
 
 	@Override

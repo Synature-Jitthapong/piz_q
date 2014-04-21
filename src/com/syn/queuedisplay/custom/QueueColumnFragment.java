@@ -34,7 +34,7 @@ public class QueueColumnFragment extends Fragment{
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mNotifyCalling = new Handler();
-		mQueueDatabase = new QueueDatabase(QueueApplication.getWritableDatabase());
+		mQueueDatabase = new QueueDatabase(((MainActivity) getActivity()).getDatabase());
 		mQueueALst = new ArrayList<QueueDisplayInfo.QueueInfo>();
 	}
 
