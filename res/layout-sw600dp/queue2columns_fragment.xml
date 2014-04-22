@@ -25,7 +25,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
+            android:layout_marginBottom="2dp"
             android:background="@drawable/calling_queue_background"
             android:orientation="vertical" >
 
@@ -72,6 +72,82 @@
 
         <TextView
             android:id="@+id/tvSumQA"
+            style="@style/ColumnSum"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:minWidth="48dp"
+            android:text="0"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginRight="1dp"
+        android:layout_weight="1"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/textView3"
+            style="@style/ColumnHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/b"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:background="@drawable/calling_queue_background"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/tvCallB"
+                style="@style/Calling"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="0dp"
+                android:ellipsize="marquee"
+                android:gravity="center"
+                android:lines="1"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:paddingTop="0dp"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="48sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvCallBSub"
+                style="@style/CallingCustName"
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:gravity="center"
+                android:lines="1"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/lvQueueB"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:divider="@null"
+            android:dividerHeight="1dp" >
+
+        </ListView>
+
+        <TextView
+            android:id="@+id/tvSumQB"
             style="@style/ColumnSum"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -25,7 +25,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
+            android:layout_marginBottom="2dp"
             android:background="@drawable/calling_queue_background"
             android:orientation="vertical" >
 
@@ -58,7 +58,6 @@
                 android:scrollHorizontally="true"
                 android:singleLine="true"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
-
         </LinearLayout>
 
         <ListView
@@ -103,7 +102,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
+            android:layout_marginBottom="2dp"
             android:background="@drawable/calling_queue_background"
             android:orientation="vertical" >
 
@@ -179,7 +178,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
+            android:layout_marginBottom="2dp"
             android:background="@drawable/calling_queue_background"
             android:orientation="vertical" >
 
@@ -227,84 +226,6 @@
 
         <TextView
             android:id="@+id/tvSumQC"
-            style="@style/ColumnSum"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:minWidth="48dp"
-            android:text="0"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textStyle="bold" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="vertical" >
-
-        <TextView
-            android:id="@+id/TextView03"
-            style="@style/ColumnHeader"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="0dp"
-            android:gravity="center"
-            android:text="@string/d"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textStyle="bold" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:background="@drawable/calling_queue_background"
-            android:orientation="vertical" >
-
-            <TextView
-                android:id="@+id/tvCallD"
-                style="@style/Calling"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="0dp"
-                android:ellipsize="marquee"
-                android:gravity="center"
-                android:lines="1"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:paddingTop="0dp"
-                android:scrollHorizontally="true"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textSize="48sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvCallDSub"
-                style="@style/CallingCustName"
-                android:layout_width="match_parent"
-                android:layout_height="32dp"
-                android:layout_marginRight="0dp"
-                android:ellipsize="marquee"
-                android:fadingEdge="horizontal"
-                android:gravity="center"
-                android:lines="1"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:scrollHorizontally="true"
-                android:singleLine="true"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-        </LinearLayout>
-
-        <ListView
-            android:id="@+id/lvQueueD"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:divider="@null"
-            android:dividerHeight="1dp" >
-
-        </ListView>
-
-        <TextView
-            android:id="@+id/tvSumQD"
             style="@style/ColumnSum"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

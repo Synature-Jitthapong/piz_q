@@ -188,9 +188,6 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 	}
 	
 	private void scheduleTbQueue(){
-		if(mTbQTimer != null)
-			mTbQTimer.cancel();
-		
 		UpdateQueueTask updateQueueTask = new UpdateQueueTask();
 		mTbQTimer.schedule(updateQueueTask, 1000, QueueApplication.getRefresh());
 	}
@@ -215,7 +212,7 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 			strHtml.append("</marquee>");
 			strHtml.append("</body>");
 			mWebView.setVisibility(View.VISIBLE);
-			mWebView.loadData(strHtml.toString(), "text/html", "UTF-8");
+			mWebView.loadData(strHtml.toString(), "text/html; charset=UTF-8", null);
 		} else {
 			mWebView.setVisibility(View.GONE);
 		}
@@ -421,21 +418,25 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 
 	@Override
 	public void onReceipt(String msg) {
-		Gson gson = new Gson();
-		Type type = new TypeToken<QueueDisplayInfo>() {}.getType();
-		try {
-			final QueueDisplayInfo queueDisplayInfo = 
-					(QueueDisplayInfo) gson.fromJson(msg, type);
-			runOnUiThread(new Runnable(){
+//		Gson gson = new Gson();
+//		Type type = new TypeToken<QueueDisplayInfo>() {}.getType();
+//		try {
+//			final QueueDisplayInfo queueDisplayInfo = 
+//					(QueueDisplayInfo) gson.fromJson(msg, type);
+//			runOnUiThread(new Runnable(){
+//
+//				@Override
+//				public void run() {
+//					updateQueueData(queueDisplayInfo);
+//				}
+//				
+//			});
+//		} catch (Exception e) {
+//		}
 
-				@Override
-				public void run() {
-					updateQueueData(queueDisplayInfo);
-				}
-				
-			});
-		} catch (Exception e) {
-		}
+		if(mTbQTimer != null)
+			mTbQTimer.cancel();
+		scheduleTbQueue();
 	}
 
 	@Override

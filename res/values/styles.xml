@@ -20,9 +20,15 @@
        	<item name="android:gravity">center</item>
     </style>
     <style name="ColumnSum" parent="ColumnHeader">
-        <item name="android:background">@color/grey_medium</item>
+        <item name="android:textSize">32sp</item>
+        <item name="android:textColor">@color/smoke_white</item>
+        <item name="android:background">@color/blue_green_dark</item>
     </style>
     <style name="Calling" parent="ColumnHeader">
+        <item name="android:shadowColor">@color/text_shadow</item>
+        <item name="android:shadowDx">1</item>
+		<item name="android:shadowDy">1</item>
+		<item name="android:shadowRadius">1.0</item>
        <item name="android:background">@android:color/transparent</item>
        <item name="android:textColor">@color/smoke_white</item>
     </style>
