@@ -3,6 +3,8 @@ package com.syn.queuedisplay.custom;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -79,7 +81,7 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 	private Fragment mQueueFragment;
 	private QueueDatabase mQueueDatabase;
 	private SystemUiHider mSystemUiHider;
-	private Handler mHandlerQueue;
+	private Timer mTbQTimer;
 	private Thread mConnThread;
 	private Thread mLoadCallingQueueThread;
 	private Handler mHandlerSpeakQueue;
@@ -140,17 +142,19 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 			}
 		});
 		// init object
-		mHandlerQueue = new Handler();
-		mHandlerQueue.post(mUpdateQueue);
+		mTbQTimer = new Timer();
 		
 		mSqliteHelper = new SQLiteHelper(this);
 		mSqlite = mSqliteHelper.getWritableDatabase();
+		
 		mQueueDatabase = new QueueDatabase(mSqlite);
 		mQueueDatabase.deleteQueue();
+		
 		mHandlerSpeakQueue = new Handler();
 		mSpeakCallingQueue = new SpeakCallingQueue(this);
 		mLoadCallingQueueThread = new Thread(this);
 		mLoadCallingQueueThread.start();
+		
 		try {
 			mConnThread = new Thread(new QueueServerSocket(this));
 			mConnThread.start();
@@ -161,8 +165,10 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 		// init media player
 		mVideoPlayer = new VideoPlayer(QueueApplication.sContext, mSurface, 
 				QueueApplication.getVDODir(), this);
+		
 		setupQueueColumn();
 		createMarqueeText();
+		scheduleTbQueue();
 	}
 
 	public SQLiteDatabase getDatabase(){
@@ -179,6 +185,14 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 		else if(QueueApplication.getColumns().equals("4"))
 			mQueueFragment = Queue4ColumnFragment.newInstance();
 		getFragmentManager().beginTransaction().replace(R.id.queueContainer, mQueueFragment).commit();
+	}
+	
+	private void scheduleTbQueue(){
+		if(mTbQTimer != null)
+			mTbQTimer.cancel();
+		
+		UpdateQueueTask updateQueueTask = new UpdateQueueTask();
+		mTbQTimer.schedule(updateQueueTask, 1000, QueueApplication.getRefresh());
 	}
 	
 	@Override
@@ -314,22 +328,21 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 		}
 	}
 	
-	private Runnable mUpdateQueue = new Runnable() {
+	class UpdateQueueTask extends TimerTask{
 
 		@Override
 		public void run() {
 			try {
 				new QueueDisplayService(QueueApplication.sContext, 
 						mLoadQueueListener).execute(QueueApplication.getFullUrl());
-				mHandlerQueue.postDelayed(this, Long.parseLong(QueueApplication.getRefresh()));
 			} catch (Exception e) {
 				Logger.appendLog(MainActivity.this, QueueApplication.LOG_DIR, 
 						QueueApplication.LOG_FILE_NAME, e.getMessage());
 				e.printStackTrace();
 			}
 		}
-
-	};
+		
+	}
 
 	private synchronized void stopConnThread(){
 		if(mConnThread != null)
@@ -355,13 +368,24 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 		}
 	}
 	
+	private void releaseVideo(){
+		try {
+			mVideoPlayer.pause();
+			mVideoPlayer.releaseMediaPlayer();
+			mVideoPlayer.startPlayMedia();
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+	
 	private void release(){
 		try {
+			releaseVideo();
 			stopLoadCallingThread();
 			stopConnThread();
-			mHandlerQueue.removeCallbacks(mUpdateQueue);
+			mTbQTimer.cancel();
 			mHandlerSpeakQueue.removeCallbacks(mSpeakQueueRunnable);
-			mVideoPlayer.releaseMediaPlayer();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -369,9 +393,9 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 	}
 
 	@Override
-	protected void onDestroy() {
+	protected void onPause() {
 		release();
-		super.onDestroy();
+		super.onPause();
 	}
 
 	public void videoBackClicked(final View v){
@@ -452,13 +476,7 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 
 	@Override
 	public void onError(Exception e) {
-		try {
-			mVideoPlayer.releaseMediaPlayer();
-			mVideoPlayer.startPlayMedia();
-		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		releaseVideo();
 	}
 
 	@Override

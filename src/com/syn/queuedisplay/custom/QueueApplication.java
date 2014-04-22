@@ -57,10 +57,17 @@ public class QueueApplication extends Application{
 		return sharedPref.getString(SettingActivity.PREF_SPEAK_TIMES, "3000");
 	}
 	
-	public static String getRefresh(){
+	public static long getRefresh(){
 		SharedPreferences sharedPref = PreferenceManager
 				.getDefaultSharedPreferences(sContext);
-		return sharedPref.getString(SettingActivity.PREF_REFRESH, "15000");
+		long refresh = 60000;
+		try {
+			refresh = Long.parseLong(sharedPref.getString(SettingActivity.PREF_REFRESH, "60000"));
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return refresh;
 	}
 	
 	public static String getInfoText(){
