@@ -164,13 +164,17 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 		mVideoPlayer = new VideoPlayer(QueueApplication.sContext, mSurface, 
 				QueueApplication.getVDODir(), this);
 		
-		setupQueueColumn();
-		createMarqueeText();
 		scheduleTbQueue();
 	}
 
 	public SQLiteDatabase getDatabase(){
 		return mSqlite;
+	}
+	
+	private void configureChange(){
+		delayedHide(100);
+		setupQueueColumn();
+		createMarqueeText();	
 	}
 	
 	private void setupQueueColumn(){
@@ -418,6 +422,7 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 
 	@Override
 	protected void onResume() {
+		configureChange();
 		super.onResume();
 		
 		if(mVideoPlayer.isPause())
