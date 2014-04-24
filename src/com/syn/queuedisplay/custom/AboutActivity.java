@@ -2,6 +2,8 @@ package com.syn.queuedisplay.custom;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -50,8 +52,18 @@ public class AboutActivity extends Activity {
 					container, false);
 			
 			TextView tvDeviceCode = (TextView) rootView.findViewById(R.id.textView2);
+			TextView tvVersion = (TextView) rootView.findViewById(R.id.textView3);
 			tvDeviceCode.setText(getActivity().getString(R.string.device_code) 
 					+ " " + QueueApplication.getDeviceCode());
+			
+			PackageInfo pInfo;
+			try {
+				pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
+				tvVersion.setText(R.string.version + pInfo.versionName);
+			} catch (NameNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			return rootView;
 		}
 	}

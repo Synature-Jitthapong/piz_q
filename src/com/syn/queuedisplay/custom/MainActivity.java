@@ -89,7 +89,6 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 	private SurfaceView mSurface;
 	private WebView mWebView;
 	private TextView mTvPlaying;
-	private TextView mTvVersion;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -98,18 +97,7 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 		mSurface = (SurfaceView) findViewById(R.id.surfaceView1);
 		mWebView = (WebView) findViewById(R.id.webView1);
 		mTvPlaying = (TextView) findViewById(R.id.textViewPlaying);
-		mTvVersion = (TextView) findViewById(R.id.tvVersion);
-		
-//		PackageInfo pInfo;
-//		try {
-//			pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-//			mTvVersion.setText("v" + pInfo.versionName);
-//		} catch (NameNotFoundException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		//new Thread(this).start();
-		
+
 		// Set up an instance of SystemUiHider to control the system UI for
 		// this activity.
 		final View head = findViewById(R.id.head);
@@ -156,6 +144,9 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 			mSocket = new QueueServerSocket(this);
 			mConnThread = new Thread(mSocket);
 			mConnThread.start();
+			
+			Logger.appendLog(this, QueueApplication.LOG_DIR, QueueApplication.LOG_FILE_NAME, 
+					" Start socket thread ");
 		} catch (IOException e2) {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
@@ -246,7 +237,7 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 			startActivity(new Intent(MainActivity.this, SettingActivity.class));
 			return true;
 		case R.id.action_about:
-			startActivity(new Intent(MainActivity.this, SettingActivity.class));
+			startActivity(new Intent(MainActivity.this, AboutActivity.class));
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -371,6 +362,9 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 			try {
 				mConnThread.interrupt();
 				mConnThread = null;
+
+				Logger.appendLog(this, QueueApplication.LOG_DIR, QueueApplication.LOG_FILE_NAME, 
+						" Stop socket thread ");
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
