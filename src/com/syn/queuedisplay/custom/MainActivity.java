@@ -80,6 +80,7 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 	private SystemUiHider mSystemUiHider;
 	private Timer mTbQTimer;
 	private Thread mConnThread;
+	private QueueServerSocket mSocket;
 	private Thread mLoadCallingQueueThread;
 	private Handler mHandlerSpeakQueue;
 	private VideoPlayer mVideoPlayer;
@@ -138,9 +139,8 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 				}
 			}
 		});
-		// init object
-		mTbQTimer = new Timer();
 		
+		// init object
 		mSqliteHelper = new SQLiteHelper(this);
 		mSqlite = mSqliteHelper.getWritableDatabase();
 		
@@ -153,7 +153,8 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 		mLoadCallingQueueThread.start();
 		
 		try {
-			mConnThread = new Thread(new QueueServerSocket(this));
+			mSocket = new QueueServerSocket(this);
+			mConnThread = new Thread(mSocket);
 			mConnThread.start();
 		} catch (IOException e2) {
 			// TODO Auto-generated catch block
@@ -185,8 +186,21 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 	}
 	
 	private void scheduleTbQueue(){
+		mTbQTimer = new Timer();
 		UpdateQueueTask updateQueueTask = new UpdateQueueTask();
 		mTbQTimer.schedule(updateQueueTask, 1000, QueueApplication.getRefresh());
+		
+		Logger.appendLog(this, QueueApplication.LOG_DIR, QueueApplication.LOG_FILE_NAME, 
+				" Start queue timer : " + QueueApplication.getRefresh() + "ms.");
+	}
+	
+	private void stopTbQueueTimer(){
+		if(mTbQTimer != null){
+			mTbQTimer.cancel();
+			mTbQTimer.purge();
+		}
+		Logger.appendLog(this, QueueApplication.LOG_DIR, QueueApplication.LOG_FILE_NAME, 
+				" Stop queue timer");
 	}
 	
 	@Override
@@ -223,12 +237,9 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		Intent intent;
 		switch (item.getItemId()) {
 		case R.id.action_settings:
-			intent = new Intent(MainActivity.this, SettingActivity.class);
-			startActivity(intent);
-			finish();
+			startActivity(new Intent(MainActivity.this, SettingActivity.class));
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -338,11 +349,21 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 		
 	}
 
+	private void closeSocket(){
+		try {
+			mSocket.closeSocket();
+		} catch (IOException e) {
+			Logger.appendLog(this, QueueApplication.LOG_DIR, QueueApplication.LOG_FILE_NAME, 
+					" Error Close socket : " + e.getMessage());
+		}
+	}
+	
 	private synchronized void stopConnThread(){
 		if(mConnThread != null)
 		{
 			try {
 				mConnThread.interrupt();
+				mConnThread = null;
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -355,6 +376,7 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 		{
 			try {
 				mLoadCallingQueueThread.interrupt();
+				mLoadCallingQueueThread = null;
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -366,7 +388,6 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 		try {
 			mVideoPlayer.pause();
 			mVideoPlayer.releaseMediaPlayer();
-			mVideoPlayer.startPlayMedia();
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -378,7 +399,7 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 			releaseVideo();
 			stopLoadCallingThread();
 			stopConnThread();
-			mTbQTimer.cancel();
+			stopTbQueueTimer();
 			mHandlerSpeakQueue.removeCallbacks(mSpeakQueueRunnable);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -388,8 +409,23 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 
 	@Override
 	protected void onPause() {
-		release();
+		mVideoPlayer.pause();
 		super.onPause();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
+		if(mVideoPlayer.isPause())
+			mVideoPlayer.resume();
+	}
+
+	@Override
+	protected void onDestroy() {
+		release();
+		closeSocket();
+		super.onDestroy();
 	}
 
 	public void videoBackClicked(final View v){
@@ -431,14 +467,17 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 //		} catch (Exception e) {
 //		}
 
-		if(mTbQTimer != null)
-			mTbQTimer.cancel();
+		stopTbQueueTimer();
 		scheduleTbQueue();
+
+		Logger.appendLog(this, QueueApplication.LOG_DIR, QueueApplication.LOG_FILE_NAME, 
+				"Mesg from socket : " + msg);
 	}
 
 	@Override
 	public void onAcceptErr(String msg) {
-		
+		Logger.appendLog(this, QueueApplication.LOG_DIR, QueueApplication.LOG_FILE_NAME, 
+				" Bad receive data from socket : " + msg);
 	}
 
 	@Override
@@ -474,7 +513,14 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 
 	@Override
 	public void onError(Exception e) {
-		releaseVideo();
+		try {
+			mVideoPlayer.pause();
+			mVideoPlayer.releaseMediaPlayer();
+			mVideoPlayer.startPlayMedia();
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 
 	@Override
