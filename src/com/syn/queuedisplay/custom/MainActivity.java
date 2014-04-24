@@ -231,7 +231,7 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.setting, menu);
+		getMenuInflater().inflate(R.menu.main_activity, menu);
 		return true;
 	}
 
@@ -239,6 +239,9 @@ public class MainActivity extends Activity implements Runnable, QueueServerSocke
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_settings:
+			startActivity(new Intent(MainActivity.this, SettingActivity.class));
+			return true;
+		case R.id.action_about:
 			startActivity(new Intent(MainActivity.this, SettingActivity.class));
 			return true;
 		default:

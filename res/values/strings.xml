@@ -44,4 +44,6 @@
 	<string name="software_info">© 2013 All Rights Reserved. Synature Technology Co., Ltd.\n 
 	55/165 M.Banklangmuang, Soi Ladprao 88, Ladprao Rd.\n Wangthonglang, Bangkok, Thailand. 10310\n
 	Tel: +66(0)-2-530-3835-6 Fax: +66(0)-2-530-3092\n E-mail: info@synaturegroup.com</string>
+	<string name="device_code">Device Code :</string>
+	<string name="title_activity_about">About</string>
 </resources>
