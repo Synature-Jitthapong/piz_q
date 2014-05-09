@@ -2,7 +2,7 @@ package com.syn.queuedisplay.custom;
 
 import java.io.File;
 import java.io.IOException;
-import com.j1tth4.mobile.util.MediaManager;
+import com.j1tth4.util.MediaManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
